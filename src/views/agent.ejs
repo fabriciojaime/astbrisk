@@ -1,0 +1,37 @@
+<%- include ('./partials/header.ejs') %>
+<body>
+    <%- include ('./partials/navbar.ejs') %>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Cadastro de Agente</h3>
+            </div>
+            <div class="body-card p-2">
+                <form action="save_agent" method="post" id="agent_form">
+                    <div class="form-group">
+                        <label for="id">ID Agente</label>
+                        <input type="number" class="form-control" id="id" name="id" value="<%=agent.id%>">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name">Nome</label>
+                        <input type="text" class="form-control" id="name" name="name" value="<%=agent.name%>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="queues">Filas</label>
+                        <select id="queues" class="selectpicker form-control" multiple data-live-search="true" data-actions-box="true" data-selected-text-format="count">
+                            <% queues.forEach( queue => { %>
+                            <option value="<%=queue.name%>" <%=queue.selected%>><%=queue.name%></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
