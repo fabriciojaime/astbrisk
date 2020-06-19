@@ -1,15 +1,29 @@
-var db = require('../config/database');
+var connDB = require('./database');
 
-function extensions() {}
-extensions.prototype.getExtensions = function(callback) {
-    
-    sql = "select * from ps_auths;"
+class Extension {
+    rExtensions(callback){
+        let sql = "select * from pjsip_extensions"
 
-    db.query(sql,function(err, ramais){
-        callback(err, ramais);
-    });
-};
+        connDB.query(sql,(err, extensions)=>{
+            callback(err, extensions);
+        });
+    }
 
-module.exports = function(){
-  return extensions;
+    rExtension(id,callback){
+        return "Ramal "+id;
+    }
+
+    cExtension(){
+
+    }
+
+    dExtension(){
+
+    }
+
+    uExtension(){
+
+    }
 }
+
+module.exports = new Extension();
