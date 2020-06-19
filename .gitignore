@@ -1,5 +1,5 @@
 # Dependency directories
 node_modules/
 
-#DB connection (make a copy of database.js.template, change the extension * .js and customize this new file)
-src/models/database.js
+#DB config
+src/models/dbconf.json
