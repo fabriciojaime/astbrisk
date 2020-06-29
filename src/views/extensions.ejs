@@ -7,37 +7,36 @@
                 <h3>Ramais</h3>
             </div>
             <div class="body-card p-2">
-                <% if(typeof response === 'object'){%>
+                <% if(extensions){%>
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Ramal</th>
                             <th>Nome</th>
                             <th>Contexto</th>
-                            <th>Grupo</th>
                             <th>Dispositivo</th>
                             <th>Última utilização</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <%response.forEach( ext => { 
-                        var status = (ext.user_agent)?'Ativo':'Inativo';
-                    %>
+                        <% extensions.forEach( ext => {%>
                         <tr>
                             <td><%=ext.extension%></td>
                             <td><%=ext.callerid%></td>
                             <td><%=ext.context%></td>
-                            <td><%=ext.named_call_group%></td>
                             <td><%=ext.user_agent%></td>
                             <td><%=ext.last_use%></td>
-                            <td><%=status%></td>
+                            <td><%=ext.status%></td>
                         </tr>
-                    <% })%>
+                        <%})%>
                     </tbody>
                 </table>
                 <%}else{%>
-                    <p><%=response%></p>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                        <p>Ocorreu uma falha ao tentar obter os dados.</p>
+                    </div>
                 <%}%>     
             </div>
         </div>
