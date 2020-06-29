@@ -2,4 +2,4 @@
 node_modules/
 
 #DB config
-src/models/dbconf.json
+external/dbconf.json

@@ -1,0 +1,249 @@
+<%- include ('./partials/header.ejs') %>
+
+<body class="bg-light">
+    <%- include ('./partials/navbar.ejs') %>
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-light bg-dark">
+                <h3><%=title%></h3>
+            </div>
+            <div class="body-card p-3">
+                <%if(!extension){%>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                    <p>Ramal inválido</p>
+                </div>
+                <%}else{%>
+                <form method="POST">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                            <label for="extension" class="input-group-text rounded-0 col-12">Ramal</label>
+                        </div>
+                        <input type="number" min="1000" max="9999" placeholder="1000 a 9999" class="form-control rounded-0" id="extension" name="extension" value="<%=extension.extension%>" <%=((extension.extension)?'disabled':'')%> required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                            <label for="callerid" class="input-group-text rounded-0 col-12">Nome</label>
+                        </div>
+                        <input type="text" class="form-control rounded-0" id="callerid" name="callerid"
+                            value="<%=extension.callerid%>">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0 p">
+                            <label for="password" class="input-group-text rounded-0 col-12">Senha</label>
+                        </div>
+                        <input type="password" pattern="[0-9]{6}" inputmode="numeric" placeholder="6 dígitos numéricos"
+                            class="form-control rounded-0" id="password" name="password" value="<%=extension.password%>"
+                            required>
+                        <div class="input-group-append">
+                            <button class="input-group-text" id="passGen"><i class="fa fa-gear"></i></button>
+                            <button class="input-group-text rounded-0 fa fa-eye" id="passVis"></button>
+                        </div>
+                    </div>
+
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                            <label for="context" class="input-group-text rounded-0 col-12">Contexto</label>
+                        </div>
+                        <input type="text" class="form-control rounded-0" id="context" name="context"
+                            value="<%=extension.context%>" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                            <label for="max_contacts" class="input-group-text rounded-0 col-12">Ligações
+                                simultâneas</label>
+                        </div>
+                        <input type="number" min="1" max="10" class="form-control rounded-0" id="max_contacts"
+                            name="max_contacts" value="<%=(extension.max_contacts)?extension.max_contacts:1%>" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                            <label for="voicemail" class="input-group-text rounded-0 col-12">Correio de voz</label>
+                        </div>
+                        <input type="text" placeholder="<exten>@<context>" class="form-control rounded-0" id="voicemail"
+                            name="voicemail">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                            <label for="codecList" class="input-group-text rounded-0 col-12">Codificadores</label>
+                        </div>
+                        <input type="hidden" id="codecs" name="codecs" value="<%=extension.codecs%>">
+                        <select class="selectpicker form-control rounded-0" id="codecList" multiple
+                            data-live-search="true" data-max-options="3" required>
+                            <optgroup label="Áudio" data-icon="fa fa-file-audio-o">
+                                <option data-tokens="audio" value="adpcm">adpcm</option>
+                                <option data-tokens="audio" value="alaw">alaw</option>
+                                <option data-tokens="audio" value="g719">g719</option>
+                                <option data-tokens="audio" value="g722">g722</option>
+                                <option data-tokens="audio" value="g723">g723</option>
+                                <option data-tokens="audio" value="g726">g726</option>
+                                <option data-tokens="audio" value="g726aal2">g726aal2</option>
+                                <option data-tokens="audio" value="g729">g729</option>
+                                <option data-tokens="audio" value="gsm">gsm</option>
+                                <option data-tokens="audio" value="ilbc">ilbc</option>
+                                <option data-tokens="audio" value="lpc10">lpc10</option>
+                                <option data-tokens="audio" value="none">none</option>
+                                <option data-tokens="audio" value="opus">opus</option>
+                                <option data-tokens="audio" value="siren14">siren14</option>
+                                <option data-tokens="audio" value="siren7">siren7</option>
+                                <option data-tokens="audio" value="slin">slin</option>
+                                <option data-tokens="audio" value="slin12">slin12</option>
+                                <option data-tokens="audio" value="slin16">slin16</option>
+                                <option data-tokens="audio" value="slin192">slin192</option>
+                                <option data-tokens="audio" value="slin24">slin24</option>
+                                <option data-tokens="audio" value="slin32">slin32</option>
+                                <option data-tokens="audio" value="slin44">slin44</option>
+                                <option data-tokens="audio" value="slin48">slin48</option>
+                                <option data-tokens="audio" value="slin96">slin96</option>
+                                <option data-tokens="audio" value="speex">speex</option>
+                                <option data-tokens="audio" value="speex16">speex16</option>
+                                <option data-tokens="audio" value="speex32">speex32</option>
+                                <option data-tokens="audio" value="testlaw">testlaw</option>
+                                <option data-tokens="audio" value="ulaw">ulaw</option>
+                            </optgroup>
+                            <optgroup label="Imagem" data-icon="fa fa-file-image-o">
+                                <option data-tokens="imagem" value="jpeg">jpeg</option>
+                                <option data-tokens="imagem" value="png">png</option>
+                            </optgroup>
+                            <optgroup label="Texto" data-icon="fa fa-file-text-o">
+                                <option data-tokens="texto" value="red">red</option>
+                                <option data-tokens="texto" value="t140">t140</option>
+                            </optgroup>
+                            <optgroup label="Vídeo" data-icon="fa fa-file-video-o">
+                                <option data-tokens="video" value="h261">h261</option>
+                                <option data-tokens="video" value="h263">h263</option>
+                                <option data-tokens="video" value="h263p">h263p</option>
+                                <option data-tokens="video" value="h264">h264</option>
+                                <option data-tokens="video" value="mpeg4">mpeg4</option>
+                                <option data-tokens="video" value="vp8">vp8</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <%if(extension.extension){%>
+                        <div class="col-4">
+                            <button type="submit" value="update" class="form-control btn btn-dark"><i
+                                    class="fa fa-copy"></i> Atualizar</button>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" value="copy" class="form-control btn btn-dark"><i
+                                    class="fa fa-copy"></i> Copiar</button>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" value="delete" class="form-control btn btn-dark"><i
+                                    class="fa fa-trash-o"></i> Excluir</button>
+                        </div>
+                        <%}else{%>
+                        <div class="col-12">
+                            <button type="submit" value="create" class="form-control btn btn-dark"><i
+                                    class="fa fa-save"></i> Salvar</button>
+                        </div>
+                        <%}%>
+                    </div>
+                </form>
+                <!-- Modal -->
+                <div class="modal fade" id="respModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-dark text-light">
+                                <h5 class="modal-title" id="modalLabel"></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="modalBody">
+                                <div class="alert alert-info alert-dismissible fade show">
+                                    <p id="msg"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    $(document).ready(() => {
+                        $('#codecList').selectpicker('val', $('#codecs').val().split(','));
+
+                        //GERAR SENHA
+                        let passGen = $("#passGen");
+                        passGen.click((e) => {
+                            e.preventDefault();
+                            passVis.parent().prev().val(Math.floor(100000 + Math.random() * 900000));
+                            $("#passGen>i").addClass('fa-spin');
+                            setTimeout(() => { $("#passGen>i").removeClass('fa-spin'); }, 300);
+                        });
+
+                        //ALTERAR VISIBILIDADE DA SENHA
+                        let passVis = $("#passVis");
+                        passVis.click((e) => {
+                            e.preventDefault();
+                            if (passVis.hasClass('fa-eye-slash')) {
+                                passVis.parent().prev().attr('type', 'password');
+                            } else {
+                                passVis.parent().prev().attr('type', 'text');
+                            }
+                            passVis.toggleClass('fa-eye-slash');
+                        });
+
+                        //MANTER ORDEM DE SELEÇÃO DOS CODECS
+                        let codecs = [];
+                        $('#codecList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                            var selected = this.options[clickedIndex].value;
+
+                            if (codecs.indexOf(selected) == -1) {
+                                codecs.push(selected);
+                            } else {
+                                codecs.splice(codecs.indexOf(selected), 1);
+                            }
+                            if (codecs.length) {
+                                $(this).next().find('.filter-option-inner-inner').text(codecs.join(', '));
+                            }
+                            $('#codecs').val(codecs.join());
+                        });
+
+                        //Enviar dados do formulário com AJAX
+                        $("form").submit(function(e){
+                            e.preventDefault();
+
+                            let data = $(this).serializeArray(),
+                                operation = $(this).find("button[type=submit]:focus").val();
+
+                            if(operation === 'copy'){
+                                window.location.href = "http://localhost/extensions/new?copy=" + $('#extension').val();
+                            }else if(operation !== 'create'){
+                                data.push({ name: 'extension', value: $('#extension').val() });
+                            }
+
+                            $.ajax({
+                                type: 'POST',
+                                url: operation,
+                                data: data,
+                                success: function (resp) {
+                                    if (resp) {
+                                        $("#modalLabel").text('Sucesso!');
+                                        $("#msg").text('Operação realizada com sucesso')
+                                        $('#respModal').modal("show").on('hidden.bs.modal', function () {
+                                            window.location.href = "http://localhost/extensions/edit?id=" + resp;
+                                        });
+                                    }else{
+                                        $("#modalLabel").text('Error!');
+                                        $("#msg").text('Falha na operação')
+                                        $("#respModal").modal("show");
+                                    }
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</body>
