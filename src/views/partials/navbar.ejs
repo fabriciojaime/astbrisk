@@ -1,5 +1,32 @@
-    <nav class="navbar nav-light bg-dark mb-3">
-        <a href="/" class="nav-brand">
-            <img src="/img/home.png" alt="Home" height="30">
-        </a>
-    </nav>
+<div class="d-flex" id="wrapper">
+
+    <div class="bg-light border-right bg-dark" id="sidebar-wrapper">
+        <div class="sidebar-heading">
+            <a href="/" class="nav-brand">
+                <img src="/img/home.png" alt="Home" height="30">
+            </a> 
+        </div>
+
+            <div class="list-group list-group-flush">
+                <a href="/extensions" class="list-group-item list-group-item-action bg-dark text-white">Extensions</a>
+                <a href="/extensions" class="list-group-item list-group-item-action bg-dark text-white">Group</a>
+            </div>
+        </div>  
+
+    <div id="page-content-wrapper">
+        <nav class="navbar nav-light bg-dark mb-3">
+             
+            <ul class="nav">
+                <li class="nav-item">
+                    <button class="btn btn-dark" id="menu-toggle"><img src="/img/menu.png" alt="Home" height="30"></button>
+                </li>
+            </ul>         
+            
+        </nav>
+
+        <script>
+            $("#menu-toggle").click(function(e) {
+              e.preventDefault();
+              $("#wrapper").toggleClass("toggled");
+            });
+        </script>

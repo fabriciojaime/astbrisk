@@ -1,0 +1,51 @@
+<%- include ('./partials/header.ejs') %>
+<body>
+    <%- include ('./partials/navbar.ejs') %>
+    <div class="container">
+
+        <div class="card mt-3">
+            <div class="card-header text-center">
+                <h2>NOVO RAMAL</h2>
+            </div>
+
+            <div class="card-body">
+
+                <form action="/extensions/salvarNovo" method="POST">
+
+                    <div class="row">
+                        <div class="col">                    
+                            <input tabindex="1" class="form-control" type="text" name="nomeRamal" placeholder="Digite o nome do ramal">
+                            <input tabindex="2" class="form-control mt-3" type="text" name="contextoRamal" placeholder="Digite o contexto do ramal">
+
+                            <div tabindex="5" class="mb-3 mt-3">
+                                <select class="custom-select" required name="tipoRamal">
+                                  <option value="" disabled selected>TIPO</option>
+                                  <option value="user">user</option>
+                                  <option value="peer">peer</option>
+                                  <option value="friend">friend</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="col">
+                            <input tabindex="3" class="form-control" type="text" name="numeroRamal" placeholder="Digite o número do ramal">
+                            <input tabindex="4" class="form-control mt-3" type="text" name="senhaRamal" placeholder="Digite a senha do ramal">
+
+                            <div tabindex="6" class="mb-3 mt-3">
+                                <select class="custom-select" required name="protocoloRamal">
+                                  <option value="" disabled selected>PROTOCOLO</option>
+                                  <option value="alaw">alaw</option>
+                                  <option value="ulaw">ulaw</option>
+                                  <option value="all">all</option>
+                                </select>
+                            </div>                            
+                        </div>
+                    </div>  
+                    <br>
+                    <button class="btn btn-primary btn-block" type="submit">SALVAR</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</body>
