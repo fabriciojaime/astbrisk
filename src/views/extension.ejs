@@ -230,7 +230,11 @@
                                         $("#modalLabel").text('Sucesso!');
                                         $("#msg").text('Operação realizada com sucesso')
                                         $('#respModal').modal("show").on('hidden.bs.modal', function () {
-                                            window.location.href = "http://localhost/extensions/edit?id=" + resp;
+                                            if(operation == 'delete'){
+                                                window.location.href = "http://localhost/extensions";
+                                            }else{
+                                                window.location.href = "http://localhost/extensions/edit?id=" + resp;
+                                            }
                                         });
                                     }else{
                                         $("#modalLabel").text('Error!');

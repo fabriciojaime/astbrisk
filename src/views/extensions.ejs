@@ -22,7 +22,7 @@
                     <tbody>
                         <% extensions.forEach( ext => {%>
                         <tr>
-                            <td><%=ext.extension%></td>
+                            <td><a href="extensions/edit?id=<%=ext.extension%>"><%=ext.extension%></a></td>
                             <td><%=ext.callerid%></td>
                             <td><%=ext.context%></td>
                             <td><%=ext.user_agent%></td>
