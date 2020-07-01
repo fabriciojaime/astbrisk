@@ -8,7 +8,7 @@ module.exports = (app)=>{
             })
     });
     
-    app.get('/extensions/', (req, res)=>{
+    app.get('/extensions/new', (req, res)=>{
         if(req.query['copy']){
             Extension(req.query['copy']).get((result)=>{
                 result.extension = null;

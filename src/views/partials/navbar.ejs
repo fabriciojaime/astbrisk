@@ -1,32 +1,127 @@
-<div class="d-flex" id="wrapper">
-
-    <div class="bg-light border-right bg-dark" id="sidebar-wrapper">
-        <div class="sidebar-heading">
-            <a href="/" class="nav-brand">
-                <img src="/img/home.png" alt="Home" height="30">
-            </a> 
-        </div>
-
-            <div class="list-group list-group-flush">
-                <a href="/extensions" class="list-group-item list-group-item-action bg-dark text-white">Extensions</a>
-                <a href="/extensions" class="list-group-item list-group-item-action bg-dark text-white">Group</a>
+<nav id="sidebar" class="sidebar-wrapper">
+    <div class="sidebar-content">
+        <div class="sidebar-brand">
+            <a href="/">AST-MGR</a>
+            <div id="close-sidebar">
+                <i class="fa fa-times"></i>
             </div>
-        </div>  
+        </div>
+        <div class="sidebar-header">
+            <div class="user-pic">
+                <img class="img-responsive img-rounded"
+                    src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+                    alt="User picture">
+            </div>
+            <div class="user-info">
+                <span class="user-name">Administrador</span>
+                <span class="user-role">Administrator</span>
+                <span class="user-status">
+                    <i class="fa fa-circle"></i>
+                    <span>Online</span>
+                </span>
+            </div>
+        </div>
+        <!-- sidebar-header  -->
 
-    <div id="page-content-wrapper">
-        <nav class="navbar nav-light bg-dark mb-3">
-             
-            <ul class="nav">
-                <li class="nav-item">
-                    <button class="btn btn-dark" id="menu-toggle"><img src="/img/menu.png" alt="Home" height="30"></button>
+        <div class="sidebar-menu">
+            <ul>
+                <li class="header-menu">
+                    <span>General</span>
                 </li>
-            </ul>         
-            
-        </nav>
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="fa fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <span class="badge badge-pill badge-warning">New</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="#">Dashboard 1
+                                    <span class="badge badge-pill badge-success">Pro</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">Dashboard 2</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
-        <script>
-            $("#menu-toggle").click(function(e) {
-              e.preventDefault();
-              $("#wrapper").toggleClass("toggled");
-            });
-        </script>
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="fa fa-phone"></i>
+                        <span>Ramal</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="/extensions">Listar ramais</a>
+                            </li>
+                            <li>
+                                <a href="/extensions/new">Cadastrar ramal</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+    <div class="sidebar-footer">
+        <a href="#">
+            <i class="fa fa-bell"></i>
+            <span class="badge badge-pill badge-warning notification">3</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-envelope"></i>
+            <span class="badge badge-pill badge-success notification">7</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-cog"></i>
+            <span class="badge-sonar"></span>
+        </a>
+        <a href="#">
+            <i class="fa fa-power-off"></i>
+        </a>
+    </div>
+</nav>
+
+<script>
+    jQuery(function ($) {
+
+        $(".sidebar-dropdown > a").click(function () {
+            $(".sidebar-submenu").slideUp(200);
+            if (
+                $(this)
+                    .parent()
+                    .hasClass("active")
+            ) {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this)
+                    .parent()
+                    .removeClass("active");
+            } else {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this)
+                    .next(".sidebar-submenu")
+                    .slideDown(200);
+                $(this)
+                    .parent()
+                    .addClass("active");
+            }
+        });
+
+        $("#close-sidebar").click(function () {
+            $(".page-wrapper").removeClass("toggled");
+        });
+        $("#show-sidebar").click(function () {
+            $(".page-wrapper").addClass("toggled");
+        });
+
+
+
+
+    });
+</script>
