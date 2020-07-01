@@ -1,48 +1,55 @@
 <%- include ('./partials/header.ejs') %>
 
 <body>
-    <div class="page-wrapper chiller-theme toggled">
-        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
-            <i class="fas fa-bars"></i>
-        </a>
-        <%- include ('./partials/navbar.ejs') %>
-        <div class="container p-5">
-            <div class="card">
-                <div class="card-header text-light bg-dark">
-                    <h3>Ramais</h3>
-                </div>
-                <div class="body-card p-2">
-                    <% if(extensions){%>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Ramal</th>
-                                <th>Nome</th>
-                                <th>Contexto</th>
-                                <th>Dispositivo</th>
-                                <th>Última utilização</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% extensions.forEach( ext => {%>
-                            <tr>
-                                <td><a href="extensions/edit?id=<%=ext.extension%>"><%=ext.extension%></a></td>
-                                <td><%=ext.callerid%></td>
-                                <td><%=ext.context%></td>
-                                <td><%=ext.user_agent%></td>
-                                <td><%=ext.last_use%></td>
-                                <td><%=ext.status%></td>
-                            </tr>
-                            <%})%>
-                        </tbody>
-                    </table>
-                    <%}else{%>
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
-                        <p>Ocorreu uma falha ao tentar obter os dados.</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <%- include ('./partials/navbar.ejs') %>
+            </div>
+            <div class="col-lg-11">
+                <div class="container p-5">
+                    <div class="card">
+                        <div class="card-header text-light bg-dark">
+                            <h3>Ramais</h3>
+                        </div>
+                        <div class="body-card p-2">
+                            <% if(extensions){%>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Ramal</th>
+                                        <th>Nome</th>
+                                        <th>Contexto</th>
+                                        <th>Dispositivo</th>
+                                        <th>Última utilização</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% extensions.forEach( ext => {%>
+                                    <tr>
+                                        <td><a href="extensions/edit?id=<%=ext.extension%>"><%=ext.extension%></a></td>
+                                        <td><%=ext.callerid%></td>
+                                        <td><%=ext.context%></td>
+                                        <td><%=ext.user_agent%></td>
+                                        <td><%=ext.last_use%></td>
+                                        <td><%=ext.status%></td>
+                                    </tr>
+                                    <%})%>
+                                </tbody>
+                            </table>
+                            <%}else{%>
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                                <p>Ocorreu uma falha ao tentar obter os dados.</p>
+                            </div>
+                            <%}%>     
                     </div>
-                    <%}%>     
+                    </div>
+                </div>
             </div>
         </div>
     </div>

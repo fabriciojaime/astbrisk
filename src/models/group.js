@@ -2,52 +2,26 @@ const Common = require('./Common');
 const Database = require('./database');
 const Extension = require('./extension');
 
-module.exports = function Group(name, members) {
+function Group(id, name, members) {
     return {
-        id: null,
+        id: id,
         name: name,
-        callerid: members,
-
-        makeReadable() {
-            this.callerid       = (this.callerid) ? (this.callerid.includes('<')) ? this.callerid.split('<', 1).toString().trim() : this.callerid : null;
-            this.codecs         = (this.codecs) ? (this.codecs.includes(',')) ? this.codecs.split(',') : this.codecs : null;
-            this.call_group     = (this.call_group) ? (this.call_group.includes(',')) ? this.call_group.split(',') : this.call_group : null;
-            this.pickup_group   = (this.pickup_group) ? (this.pickup_group.includes(',')) ? this.pickup_group.split(',') : this.pickup_group : null;
-            this.status         = (this.user_agent) ? 'Em uso' : 'Indiponível';
-            this.last_use       = (this.last_use) ? Common.formatDate(this.last_use) : this.last_use;
-        },
+        members: members,
 
         makeSafe() {
-            this.callerid = (this.callerid) ? `${this.callerid} <${this.extension}>` : null;
-            this.password = (this.password.match(/^[0-9]{6}/)) ? this.password : Math.floor(100000 + Math.random() * 900000);
-            this.call_group = (this.call_group) ? (typeof this.call_group === 'string') ? this.call_group : this.call_group.join() : null;
-            this.pickup_group = (this.pickup_group) ? (typeof this.pickup_group === 'string') ? this.pickup_group : this.pickup_group.join() : null;
+            this.name = (this.name) ? Common.sanitizeString(this.name.toUpperCase()) : null;
         },
 
         async getAll(callback) {
             let db = Database(),
-                extList = [];
+                grpList = [];
 
             try {
-                let rows = await db.query('select * from pjsip_extensions');
-                rows.forEach((row) => {
-                    let ext = Extension(
-                        row.extension,
-                        row.callerid,
-                        row.password,
-                        row.context,
-                        row.codecs,
-                        row.max_contacts,
-                        row.call_group,
-                        row.pickup_group,
-                        row.voicemail,
-                        row.user_agent,
-                        row.last_use
-                    );
-                    ext.makeReadable();
-                    extList.push(ext);
+                let rows = await db.query('select id, g.name, (select group_concat(id) from ps_endpoints where FIND_IN_SET(g.id,call_group) > 0	) as call_group, (select group_concat(id) from ps_endpoints where FIND_IN_SET(g.id,pickup_group) > 0 ) as pickup_group from asterisk.groups as g');
+                rows.forEach((row)=>{
+                    grpList.push( Group(row.id, row.name, {call_group: row.call_group, pickup_group: row.pickup_group}) );
                 });
-                callback(extList);
+                callback(grpList);
             } catch (e) {
                 callback(false);
                 console.log(e);
@@ -57,25 +31,18 @@ module.exports = function Group(name, members) {
         },
 
         async get(callback, id) {
-            let db = Database();
+            let db = Database(),
+            grpList = []
+            sql = 'select id, g.name, (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,call_group) > 0	) as call_group, (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,pickup_group) > 0 ) as pickup_group from asterisk.groups as g where g.id=?';
 
-            this.extension = (extension) ? extension : this.extension;
-            
+            this.id = (id) ? id : this.id;
+
             try {
-                let rows = await db.query('select * from pjsip_extensions where extension=?', [this.extension]);
-                if(rows.length){
-                    this.extension = rows[0].extension;
-                    this.callerid = rows[0].callerid;
-                    this.password = rows[0].password;
-                    this.context = rows[0].context;
-                    this.codecs = rows[0].codecs;
-                    this.max_contacts = rows[0].max_contacts;
-                    this.call_group = rows[0].call_group;
-                    this.pickup_group = rows[0].pickup_group;
-                    this.voicemail = rows[0].voicemail;
-                    this.user_agent = rows[0].user_agent;
-                    this.last_use = rows[0].last_use;
-                    await this.makeReadable();
+                let row = await db.query(sql,[this.id]);
+                if(row.length){
+                    this.id = row[0].id;
+                    this.name = row[0].name;
+                    this.members = {call_group: row[0].call_group, pickup_group: row[0].pickup_group};
                     callback(this);
                 }else{
                     callback(false);
@@ -89,34 +56,25 @@ module.exports = function Group(name, members) {
         },
 
         async create(callback, members) {
+            let db = Database();
+
             await this.makeSafe();
 
-
-            let db = Database(),
-                sql1 = "insert into ps_endpoints (id,aors,auth,context,disallow,allow,outbound_auth,rewrite_contact,rtp_symmetric,callerid,named_call_group,named_pickup_group,language) values (?,?,?,?,?,?,?,?,?,?,?,?,?);",
-                sql2 = "insert into ps_auths (id,auth_type,password,username) values (?,?,?,?)",
-                sql3 = "insert into ps_aors (id,max_contacts,authenticate_qualify) values (?,?,?)",
-                sqlData1 = [this.extension, this.extension, this.extension, this.context, 'all', this.codecs, this.extension, 'yes', 'yes', this.callerid, this.call_group, this.pickup_group, 'pt-br'],
-                sqlData2 = [this.extension, 'userpass', this.password, this.extension],
-                sqlData3 = [this.extension, this.max_contacts, 'yes'];
-
             try {
-                await db.beginTransaction();
-                await db.query(sql1, sqlData1);
-                await db.query(sql2, sqlData2);
-                await db.query(sql3, sqlData3);
-                await db.commit();
-                callback(this.extension);
+                let row = await db.query("insert into asterisk.groups (name) values (?)", [this.name]);
+                this.id = row.insertId;
+                this.get((result)=>{
+                    callback(this);
+                });
             } catch (e) {
                 console.log(e.sqlMessage);
                 callback(false);
-                db.rollback();
             } finally {
                 db.close();
             }
         },
 
-        async update(callback) {
+        async update(callback, members) {
             await this.makeSafe();
 
             let db = Database(),
@@ -140,12 +98,12 @@ module.exports = function Group(name, members) {
                 db.rollback();
             } finally {
                 db.close();
-            }            
+            }
         },
-        
+
         async delete(callback) {
             let db = Database();
-            
+
             try {
                 await db.beginTransaction();
                 await db.query("delete from ps_endpoints where id=?", [this.extension]);
@@ -163,3 +121,13 @@ module.exports = function Group(name, members) {
         }
     }
 };
+
+
+Group(null,'CPD')
+    .getAll((result)=>{
+        if(result){
+            console.log(result);
+        }else{
+            console.log('Não foi possível criar o grupo');
+        }
+    });
