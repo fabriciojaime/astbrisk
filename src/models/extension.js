@@ -155,9 +155,9 @@ module.exports = function Extension(extension, callerid, password, context, code
             
             try {
                 await db.beginTransaction();
-                await db.query("delete from ps_endpoints where id=?", [$this.extension]);
-                await db.query("delete from ps_auths where id=?", [$this.extension]);
-                await db.query("delete from ps_aors where id=?", [$this.extension]);
+                await db.query("delete from ps_endpoints where id=?", [this.extension]);
+                await db.query("delete from ps_auths where id=?", [this.extension]);
+                await db.query("delete from ps_aors where id=?", [this.extension]);
                 await db.commit();
                 callback(true);
             } catch (e) {
