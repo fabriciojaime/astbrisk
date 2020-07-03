@@ -32,7 +32,7 @@ module.exports = function Extension(extension, callerid, password, context, code
             this.pickup_group = (this.pickup_group) ? (typeof this.pickup_group === 'string') ? this.pickup_group : this.pickup_group.join() : null;
         },
 
-        async getAll(callback) {
+        async getAll(callback = function(){}) {
             let db = Database(),
                 extList = [];
 
@@ -64,7 +64,7 @@ module.exports = function Extension(extension, callerid, password, context, code
             }
         },
 
-        async get(callback, extension) {
+        async get(callback = function(){}, extension) {
             let db = Database();
 
             this.extension = (extension) ? extension : this.extension;
@@ -85,22 +85,25 @@ module.exports = function Extension(extension, callerid, password, context, code
                     this.last_use = rows[0].last_use;
                     await this.makeReadable();
                     callback(this);
+                    return this;
                 }else{
                     callback(false);
+                    return false;
                 }
             } catch (e) {
-                callback(false);
                 console.log(e);
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }
         },
 
-        async create(callback) {
+        async create(callback = function(){}) {
             await this.makeSafe();
 
             let db = Database(),
-                sql1 = "insert into ps_endpoints (id,aors,auth,context,disallow,allow,outbound_auth,rewrite_contact,rtp_symmetric,callerid,named_call_group,named_pickup_group,language) values (?,?,?,?,?,?,?,?,?,?,?,?,?);",
+                sql1 = "insert into ps_endpoints (id,aors,auth,context,disallow,allow,outbound_auth,rewrite_contact,rtp_symmetric,callerid,call_group,pickup_group,language) values (?,?,?,?,?,?,?,?,?,?,?,?,?);",
                 sql2 = "insert into ps_auths (id,auth_type,password,username) values (?,?,?,?)",
                 sql3 = "insert into ps_aors (id,max_contacts,authenticate_qualify) values (?,?,?)",
                 sqlData1 = [this.extension, this.extension, this.extension, this.context, 'all', this.codecs, this.extension, 'yes', 'yes', this.callerid, this.call_group, this.pickup_group, 'pt-br'],
@@ -123,11 +126,11 @@ module.exports = function Extension(extension, callerid, password, context, code
             }
         },
 
-        async update(callback) {
+        async update(callback = function(){}) {
             await this.makeSafe();
 
             let db = Database(),
-                sql1 = "update ps_endpoints set context=?,allow=?,callerid=?,named_call_group=?,named_pickup_group=? where id=?",
+                sql1 = "update ps_endpoints set context=?,allow=?,callerid=?,call_group=?,pickup_group=? where id=?",
                 sql2 = "update ps_auths set password=? where id=?",
                 sql3 = "update ps_aors set max_contacts=? where id=?",
                 sqlData1 = [this.context, this.codecs, this.callerid, this.call_group, this.pickup_group, this.extension],
@@ -150,7 +153,7 @@ module.exports = function Extension(extension, callerid, password, context, code
             }            
         },
         
-        async delete(callback) {
+        async delete(callback = function(){}) {
             let db = Database();
             
             try {
