@@ -12,12 +12,12 @@ module.exports = function Group(id, name, call_members, pickup_members) {
         //OK
         makeSafe() {
             this.name = (this.name) ? Common.sanitizeString(this.name.toUpperCase()) : null;
-            this.call_members = (typeof this.call_members === 'object') ? this.call_members : false;
-            this.pickup_members = (typeof this.pickup_members === 'object') ? this.pickup_members : false;
+            this.call_members = (typeof this.call_members === 'object') ? this.call_members : [];
+            this.pickup_members = (typeof this.pickup_members === 'object') ? this.pickup_members : [];
         },
 
         //OK
-        async getAll(callback) {
+        async getAll(callback = function(){}) {
             let db = Database(),
                 grpList = [];
 
@@ -30,22 +30,23 @@ module.exports = function Group(id, name, call_members, pickup_members) {
                     from asterisk.groups as g'
                 );
 
-                rows.forEach((row) => {
-                    grpList.push(Group(row.id, row.name, row.call_members, row.pickup_members));
-                });
+                for (let [idx, row] of rows.entries()) {
+                    await grpList.push(Group(row.id, row.name, row.call_members, row.pickup_members));
+                }
                 callback(grpList);
+                return grpList;
             } catch (e) {
-                callback(false);
                 console.log(e);
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }
         },
 
         //OK
-        async get(callback) {
+        async get(callback = function(){}) {
             let db = Database(),
-                grpList = []
                 sql = 'select\
                             id,\
                             g.name,\
@@ -61,97 +62,97 @@ module.exports = function Group(id, name, call_members, pickup_members) {
                     this.call_members = row[0].call_members;
                     this.pickup_members = row[0].pickup_members;
                     callback(this);
+                    return this;
                 } else {
                     callback(false);
+                    return false;
                 }
             } catch (e) {
-                callback(false);
                 console.log(e);
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }
         },
 
         //OK
-        async create(callback) {
+        async create(callback = function(){}) {
             let db = Database();
-
             await this.makeSafe();
-
             try {
+                db.beginTransaction();
                 let row = await db.query("insert into asterisk.groups (name) values (?)", [this.name]);
                 this.id = row.insertId;
 
-                var promises;
-
-                if (this.call_members) {
-                    promises += this.call_members.map(async (exten, idx) => {
-                        db.query("update asterisk.ps_endpoints\
+                for (let [idx, exten] of this.call_members.entries()) {
+                    //console.log(`Add ${exten} ao call_group ${this.name}`);
+                    await db.query("\
+                            update asterisk.ps_endpoints\
                                 set call_group =\
                                     case\
                                         when LENGTH(call_group) > 0 then concat(call_group,',?')\
                                         else ?\
                                     end\
-                                where id = ? and (find_in_set('?',call_group) < 1 or find_in_set('?',call_group) is null);",
-                            [this.id, this.id, exten, this.id, this.id]);
-                    });
+                            where id = ? and (find_in_set('?',call_group) < 1 or find_in_set('?',call_group) is null);",
+                        [this.id, this.id, exten, this.id, this.id]
+                    );
                 }
 
-                if (this.pickup_members) {
-                    promises += this.pickup_members.map(async (exten, idx) => {
-                        db.query("update asterisk.ps_endpoints\
-                                set pickup_group = \
+                for (let [idx, exten] of this.pickup_members.entries()) {
+                    //console.log(`Add ${exten} ao pickup_group ${this.name}`);
+                    await db.query("\
+                            update asterisk.ps_endpoints\
+                                set pickup_group =\
                                     case\
                                         when LENGTH(pickup_group) > 0 then concat(pickup_group,',?')\
                                         else ?\
                                     end\
-                                where id = ? and (find_in_set('?',pickup_group) < 1 or find_in_set('?',pickup_group) is null);",
-                            [this.id, this.id, exten, this.id, this.id]);
-                    });
+                            where id = ? and (find_in_set('?',pickup_group) < 1 or find_in_set('?',pickup_group) is null);",
+                        [this.id, this.id, exten, this.id, this.id]
+                    );
                 }
 
-                if (promises) {
-                    await Promise.all(promises);
-                }
-
-                this.get((result) => {
-                    callback(this);
-                });
+                await db.commit();
+                await this.get();
+                callback(this);
+                return this;
             } catch (e) {
                 console.log(e.sqlMessage);
+                db.rollback();
                 callback(false);
+                return false;
             } finally {
                 db.close();
             }
         },
 
-        //AJUSTAR RETORNO, CALL E PICKUP GROUP UNDEFINED
-        async update(callback) {
-            let oldGroup;
-
-            await Group(this.id).get((result) => {
-                oldGroup = result;
-            });
+        //OK
+        async update(callback = function(){}) {
+            let oldGroup = await Group(this.id).get();
 
             if (oldGroup) {
-                oldGroup.delete((result) => {
-                    if (result) {
-                        this.makeSafe();
-                        this.create((result) => {
-                            callback(this);
-                        });
-                    } else {
+                if (await oldGroup.delete()){
+                    await this.makeSafe();
+                    if(await this.create()){
+                        callback(this);
+                        return this;
+                    }else{
                         callback(false);
+                        return false;
                     }
-                });
-
+                } else {
+                    callback(false);
+                    return false;
+                }
             } else {
                 callback(false);
+                return (false);
             }
         },
 
         //OK
-        async delete(callback) {
+        async delete(callback = function(){}) {
             let db = Database(),
                 sql1 = "UPDATE asterisk.ps_endpoints \
                 SET \
@@ -175,13 +176,16 @@ module.exports = function Group(id, name, call_members, pickup_members) {
                 await db.query(sql2, [this.id]);
                 await db.commit();
                 callback(true);
+                return true;
             } catch (e) {
                 console.log(e.sqlMessage);
-                callback(false);
                 db.rollback();
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }
         }
+
     }
 };
