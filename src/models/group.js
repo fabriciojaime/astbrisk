@@ -76,6 +76,27 @@ module.exports = function Group(id, name, call_members, pickup_members) {
             }
         },
 
+        async getAllNoMembers(callback = function(){}){
+            let db = Database(),
+                grpList = [];
+
+            try {
+                let rows = await db.query('select * from asterisk.groups');
+
+                for (let [idx, row] of rows.entries()) {
+                    await grpList.push({id: row.id, name: row.name});
+                }
+                callback(grpList);
+                return grpList;
+            } catch (e) {
+                console.log(e);
+                callback(false);
+                return false;
+            } finally {
+                db.close();
+            }
+        },
+
         //OK
         async create(callback = function(){}) {
             let db = Database();

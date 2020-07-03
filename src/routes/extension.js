@@ -1,5 +1,6 @@
 module.exports = (app)=>{
     const Extension = require('../models/extension');  
+    const Group = require('../models/group');  
  
     app.get('/extensions', (req, res)=>{
         Extension()
@@ -8,22 +9,18 @@ module.exports = (app)=>{
             })
     });
     
-    app.get('/extensions/new', (req, res)=>{
-        if(req.query['copy']){
-            Extension(req.query['copy']).get((result)=>{
-                result.extension = null;
-                res.render('extension',{title: `Cópia do ramal <${req.query['copy']}>`, extension: result});
-            });
-        }else{
-            res.render('extension',{title: 'Novo Ramal', extension: Extension()});
-        }
+    app.get('/extensions/new', async (req, res)=>{
+        let t = (req.query['copy']) ? `Cópia do ramal <${req.query['copy']}>` : 'Novo Ramal',
+            e = (req.query['copy']) ? await Extension(req.query['copy']).get() : Extension(),
+            g = await Group().getAllNoMembers();
+            e.extension = null; 
+            res.render('extension',{title: t, extension: e, group: g});
     });
     
-    app.get('/extensions/edit', (req, res)=>{
-        Extension(req.query['id'])
-            .get((result)=>{
-                res.render('extension',{title: 'Dados do Ramal', extension: result});
-            });
+    app.get('/extensions/edit', async (req, res)=>{
+        let e = await Extension(req.query['id']).get(),
+            g = await Group().getAllNoMembers();
+            res.render('extension',{title: 'Dados do ramal', extension: e, group: g})
     });
 
     app.post('/extensions/create', (req, res)=>{
