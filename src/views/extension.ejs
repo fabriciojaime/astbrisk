@@ -11,43 +11,34 @@
             </div>
             <div class="col-lg-11">
                 <div class="container p-5">
-                    <div class="card">
-                        <div class="card-header text-light bg-dark">
-                            <h3><%=title%></h3>
-                        </div>
-                        <div class="body-card p-3">
-                            <%if(!extension){%>
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
-                                <p>Ramal inválido</p>
+                <%if(extension){%>
+                    
+                    <form>
+                        <div class="card">
+                            <div class="card-header text-light bg-dark">
+                                <h3><%=title%></h3>
                             </div>
-                            <%}else{%>
-                            <form method="POST">
+                            <div class="body-card p-3">
+
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
                                         <label for="extension" class="input-group-text rounded-0 col-12">Ramal</label>
                                     </div>
-                                    <input type="number" min="1000" max="9999" placeholder="1000 a 9999"
-                                        class="form-control rounded-0" id="extension" name="extension"
-                                        value="<%=extension.extension%>" <%=((extension.extension)?'disabled':'')%>
-                                        required>
+                                    <input type="number" min="1000" max="9999" placeholder="1000 a 9999" class="form-control rounded-0" id="extension" name="extension" value="<%=extension.extension%>" <%=((extension.extension)?'disabled':'')%> required>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
                                         <label for="callerid" class="input-group-text rounded-0 col-12">Nome</label>
                                     </div>
-                                    <input type="text" class="form-control rounded-0" id="callerid" name="callerid"
-                                        value="<%=extension.callerid%>">
+                                    <input type="text" class="form-control rounded-0" id="callerid" name="callerid" value="<%=extension.callerid%>">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0 p">
                                         <label for="password" class="input-group-text rounded-0 col-12">Senha</label>
                                     </div>
-                                    <input type="password" pattern="[0-9]{6}" inputmode="numeric"
-                                        placeholder="6 dígitos numéricos" class="form-control rounded-0" id="password"
-                                        name="password" value="<%=extension.password%>" required>
+                                    <input type="password" pattern="[0-9]{6}" inputmode="numeric" placeholder="6 dígitos numéricos" class="form-control rounded-0" id="password" name="password" value="<%=extension.password%>" required>
                                     <div class="input-group-append">
                                         <button class="input-group-text" id="passGen"><i class="fa fa-cog"></i></button>
                                         <button class="input-group-text rounded-0 fa fa-eye" id="passVis"></button>
@@ -58,8 +49,7 @@
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
                                         <label for="context" class="input-group-text rounded-0 col-12">Contexto</label>
                                     </div>
-                                    <input type="text" class="form-control rounded-0" id="context" name="context"
-                                        value="<%=extension.context%>" required>
+                                    <input type="text" class="form-control rounded-0" id="context" name="context" value="<%=extension.context%>" required>
                                 </div>
 
                                 <div class="input-group mb-3">
@@ -67,8 +57,7 @@
                                         <label for="codecList" class="input-group-text rounded-0 col-12">Grupo</label>
                                     </div>
                                     <input type="hidden" id="call_group" value="<%=extension.call_group%>">
-                                    <select class="selectpicker form-control rounded-0" id="callGroupList"  name="call_group" multiple
-                                        data-live-search="true" data-max-options="3">
+                                    <select class="selectpicker form-control rounded-0" id="callGroupList" name="call_group" multiple data-live-search="true" data-max-options="3">
                                         <% group.forEach( grp => { %>
                                         <option value="<%=grp.id%>"><%=grp.name%></option>
                                         <% }) %>
@@ -77,13 +66,10 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
-                                        <label for="codecList" class="input-group-text rounded-0 col-12">Grupo de
-                                            captura</label>
+                                        <label for="codecList" class="input-group-text rounded-0 col-12">Grupo de captura</label>
                                     </div>
-                                    <input type="hidden" id="pickup_group"
-                                        value="<%=extension.pickup_group%>">
-                                    <select class="selectpicker form-control rounded-0" id="pickupGroupList" name="pickup_group" multiple
-                                        data-live-search="true" data-max-options="3">
+                                    <input type="hidden" id="pickup_group" value="<%=extension.pickup_group%>">
+                                    <select class="selectpicker form-control rounded-0" id="pickupGroupList" name="pickup_group" multiple data-live-search="true" data-max-options="3">
                                         <% group.forEach( grp => { %>
                                         <option value="<%=grp.id%>"><%=grp.name%></option>
                                         <% }) %>
@@ -92,31 +78,24 @@
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
-                                        <label for="max_contacts" class="input-group-text rounded-0 col-12">Ligações
-                                            simultâneas</label>
+                                        <label for="max_contacts" class="input-group-text rounded-0 col-12">Ligações simultâneas</label>
                                     </div>
-                                    <input type="number" min="1" max="10" class="form-control rounded-0"
-                                        id="max_contacts" name="max_contacts"
-                                        value="<%=(extension.max_contacts)?extension.max_contacts:1%>" required>
+                                    <input type="number" min="1" max="10" class="form-control rounded-0" id="max_contacts" name="max_contacts" value="<%=(extension.max_contacts)?extension.max_contacts:1%>" required>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
-                                        <label for="voicemail" class="input-group-text rounded-0 col-12">Correio de
-                                            voz</label>
+                                        <label for="voicemail" class="input-group-text rounded-0 col-12">Correio de voz</label>
                                     </div>
-                                    <input type="text" placeholder="<exten>@<context>" class="form-control rounded-0"
-                                        id="voicemail" name="voicemail">
+                                    <input type="text" placeholder="<exten>@<context>" class="form-control rounded-0" id="voicemail" name="voicemail">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
-                                        <label for="codecList"
-                                            class="input-group-text rounded-0 col-12">Codificadores</label>
+                                        <label for="codecList" class="input-group-text rounded-0 col-12">Codificadores</label>
                                     </div>
                                     <input type="hidden" id="codecs" name="codecs" value="<%=extension.codecs%>">
-                                    <select class="selectpicker form-control rounded-0" id="codecList" multiple
-                                        data-live-search="true" data-max-options="3" required>
+                                    <select class="selectpicker form-control rounded-0" id="codecList" multiple data-live-search="true" data-max-options="3" required>
                                         <optgroup label="Áudio" data-icon="fa fa-file-audio-o">
                                             <option data-tokens="audio" value="adpcm">adpcm</option>
                                             <option data-tokens="audio" value="alaw">alaw</option>
@@ -161,6 +140,7 @@
                                             <option data-tokens="video" value="h263">h263</option>
                                             <option data-tokens="video" value="h263p">h263p</option>
                                             <option data-tokens="video" value="h264">h264</option>
+                                            <option data-tokens="video" value="h265">h265</option>
                                             <option data-tokens="video" value="mpeg4">mpeg4</option>
                                             <option data-tokens="video" value="vp8">vp8</option>
                                         </optgroup>
@@ -171,133 +151,116 @@
                                 <div class="row">
                                     <%if(extension.extension){%>
                                     <div class="col-4">
-                                        <button type="submit" value="update" class="form-control btn btn-dark"><i
-                                                class="fa fa-save"></i> Atualizar</button>
+                                        <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
                                     </div>
                                     <div class="col-4">
-                                        <button type="submit" value="copy" class="form-control btn btn-dark"><i
-                                                class="fa fa-copy"></i> Copiar</button>
+                                        <button type="submit" value="copy" class="form-control btn btn-dark"><i class="fa fa-copy"></i> Copiar</button>
                                     </div>
                                     <div class="col-4">
-                                        <button type="submit" value="delete" class="form-control btn btn-dark"><i
-                                                class="fa fa-trash-alt"></i> Excluir</button>
+                                        <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
                                     </div>
                                     <%}else{%>
                                     <div class="col-12">
-                                        <button type="submit" value="create" class="form-control btn btn-dark"><i
-                                                class="fa fa-save"></i> Salvar</button>
+                                        <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
                                     </div>
                                     <%}%>
-                    </div>
-                </form>
-
-                <!-- Modal -->
-                <div class="modal fade" id="respModal" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-dark text-light">
-                                <h5 class="modal-title" id="modalLabel"></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body" id="modalBody">
-                                <div class="alert alert-info alert-dismissible fade show">
-                                    <p id="msg"></p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Scripts -->
-                <script>
-                    $(document).ready(() => {
-                        $('#codecList').selectpicker('val', $('#codecs').val().split(','));
-                        $('#callGroupList').selectpicker('val', $('#call_group').val().split(','));
-                        $('#pickupGroupList').selectpicker('val', $('#pickup_group').val().split(','));
-                        if ($('#codecs').val()) $('#codecList').next().find('.filter-option-inner-inner').text($('#codecs').val());
 
-                        //GERAR SENHA
-                        let passGen = $("#passGen");
-                        passGen.click((e) => {
-                            e.preventDefault();
-                            passVis.parent().prev().val(Math.floor(100000 + Math.random() * 900000));
-                            $("#passGen>i").addClass('fa-spin');
-                            setTimeout(() => { $("#passGen>i").removeClass('fa-spin'); }, 300);
-                        });
+                        <!-- Scripts -->
+                        <script>
+                            $(document).ready(() => {
+                                $('#codecList').selectpicker('val', $('#codecs').val().split(','));
+                                $('#callGroupList').selectpicker('val', $('#call_group').val().split(','));
+                                $('#pickupGroupList').selectpicker('val', $('#pickup_group').val().split(','));
+                                if ($('#codecs').val()) $('#codecList').next().find('.filter-option-inner-inner').text($('#codecs').val());
 
-                        //ALTERAR VISIBILIDADE DA SENHA
-                        let passVis = $("#passVis");
-                        passVis.click((e) => {
-                            e.preventDefault();
-                            if (passVis.hasClass('fa-eye-slash')) {
-                                passVis.parent().prev().attr('type', 'password');
-                            } else {
-                                passVis.parent().prev().attr('type', 'text');
-                            }
-                            passVis.toggleClass('fa-eye-slash');
-                        });
+                                //GERAR SENHA
+                                let passGen = $("#passGen");
+                                passGen.click((e) => {
+                                    e.preventDefault();
+                                    passVis.parent().prev().val(Math.floor(100000 + Math.random() * 900000));
+                                    $("#passGen>i").addClass('fa-spin');
+                                    setTimeout(() => { $("#passGen>i").removeClass('fa-spin'); }, 300);
+                                });
 
-                        //MANTER ORDEM DE SELEÇÃO DOS CODECS
-                        let codecs = ($('#codecs').val()) ? $('#codecs').val().split(',') : [];
-                        $('#codecList').on('changed.bs.select', function (e, clickedIndex, isSelected) {
-                            var selected = this.options[clickedIndex].value;
-                            if (isSelected) {
-                                codecs.push(selected);
-                            } else {
-                                codecs = codecs.filter(function (e) { return e !== selected })
-                            }
-                            if (codecs.length) $(this).next().find('.filter-option-inner-inner').text(codecs.join(', '));
-                            $('#codecs').val(codecs.join());
-                        });
-
-
-                        //Enviar dados do formulário com AJAX
-                        $("form").submit(function (e) {
-                            e.preventDefault();
-
-                            let data = $(this).serializeArray(),
-                                operation = $(this).find("button[type=submit]:focus").val();
-
-                            if (operation === 'copy') {
-                                window.location.href = "http://localhost/extensions/new?copy=" + $('#extension').val();
-                                return;
-                            } else if (operation !== 'create') {
-                                data.push({ name: 'extension', value: $('#extension').val() });
-                            }
-
-                            $.ajax({
-                                type: 'POST',
-                                url: operation,
-                                data: data,
-                                success: function (resp) {
-                                    if (resp) {
-                                        $("#modalLabel").text('Sucesso!');
-                                        $("#msg").text('Operação realizada com sucesso')
-                                        $('#respModal').modal("show").on('hidden.bs.modal', function () {
-                                            if (operation == 'delete') {
-                                                window.location.href = "http://localhost/extensions";
-                                            } else {
-                                                window.location.href = "http://localhost/extensions/edit?id=" + resp;
-                                            }
-                                        });
+                                //ALTERAR VISIBILIDADE DA SENHA
+                                let passVis = $("#passVis");
+                                passVis.click((e) => {
+                                    e.preventDefault();
+                                    if (passVis.hasClass('fa-eye-slash')) {
+                                        passVis.parent().prev().attr('type', 'password');
                                     } else {
-                                        $("#modalLabel").text('Error!');
-                                        $("#msg").text('Falha na operação')
-                                        $("#respModal").modal("show");
+                                        passVis.parent().prev().attr('type', 'text');
                                     }
-                                }
+                                    passVis.toggleClass('fa-eye-slash');
+                                });
+
+                                //MANTER ORDEM DE SELEÇÃO DOS CODECS
+                                let codecs = ($('#codecs').val()) ? $('#codecs').val().split(',') : [];
+                                $('#codecList').on('changed.bs.select', function (e, clickedIndex, isSelected) {
+                                    var selected = this.options[clickedIndex].value;
+                                    if (isSelected) {
+                                        codecs.push(selected);
+                                    } else {
+                                        codecs = codecs.filter(function (e) { return e !== selected })
+                                    }
+                                    if (codecs.length) $(this).next().find('.filter-option-inner-inner').text(codecs.join(', '));
+                                    $('#codecs').val(codecs.join());
+                                });
+
+
+                                //Enviar dados do formulário com AJAX
+                                $("form").submit(function (e) {
+                                    e.preventDefault();
+
+                                    let data = $(this).serializeArray(),
+                                        operation = $(this).find("button[type=submit]:focus").val();
+
+                                    data.push({ name: 'operation', value: operation });
+
+                                    if(operation === 'copy'){
+                                        window.location.href = 'http://localhost/extensions/new?copy='+$('#extension').val();
+                                        return;
+                                    } else if (operation !== 'create') {
+                                        data.push({ name: 'extension', value: $('#extension').val() });
+                                    }
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: 'submit',
+                                        data: data,
+                                        success: function (resp) {
+                                            if (resp) {
+                                                alert('OPERAÇÃO REALIZADA COM SUCESSO!');
+                                                if(operation === 'delete'){
+                                                    window.location.href = "http://localhost/extensions";
+                                                }else{
+                                                    window.location.href = "http://localhost/extensions/edit?id="+resp;
+                                                }   
+                                            } else {
+                                                alert('FALHA NA OPERAÇÃO!')
+                                            }
+                                        }
+                                    });
+                                });
                             });
-                        });
-                    });
-                </script>
-                <%}%>
-                        </div>
+                        </script>
+                    </form>
+
+                <%}else{%>
+
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                        <p>Ramal inválido</p>
                     </div>
+
+                <%}%>
                 </div>
             </div>
         </div>
+    </div>
 </body>
 
 </html>
