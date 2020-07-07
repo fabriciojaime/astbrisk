@@ -56,9 +56,11 @@ module.exports = function Extension(extension, callerid, password, context, code
                     extList.push(ext);
                 });
                 callback(extList);
+                return extList;
             } catch (e) {
-                callback(false);
                 console.log(e);
+                callback(false);
+                return extList;
             } finally {
                 db.close();
             }

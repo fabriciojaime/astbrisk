@@ -61,31 +61,31 @@
                                     <input type="text" class="form-control rounded-0" id="context" name="context"
                                         value="<%=extension.context%>" required>
                                 </div>
-                                
+
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
-                                        <label for="codecList"
-                                            class="input-group-text rounded-0 col-12">Grupo</label>
+                                        <label for="codecList" class="input-group-text rounded-0 col-12">Grupo</label>
                                     </div>
-                                    <input type="hidden" id="call_group" name="call_group" value="<%=extension.call_group%>">
-                                    <select class="selectpicker form-control rounded-0" id="callGroupList" multiple
+                                    <input type="hidden" id="call_group" value="<%=extension.call_group%>">
+                                    <select class="selectpicker form-control rounded-0" id="callGroupList"  name="call_group" multiple
                                         data-live-search="true" data-max-options="3">
                                         <% group.forEach( grp => { %>
-                                            <option value="<%=grp.id%>"><%=grp.name%></option>
+                                        <option value="<%=grp.id%>"><%=grp.name%></option>
                                         <% }) %>
                                     </select>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
-                                        <label for="codecList"
-                                            class="input-group-text rounded-0 col-12">Grupo de captura</label>
+                                        <label for="codecList" class="input-group-text rounded-0 col-12">Grupo de
+                                            captura</label>
                                     </div>
-                                    <input type="hidden" id="pickup_group" name="pickup_group" value="<%=extension.pickup_group%>">
-                                    <select class="selectpicker form-control rounded-0" id="pickupGroupList" multiple
+                                    <input type="hidden" id="pickup_group"
+                                        value="<%=extension.pickup_group%>">
+                                    <select class="selectpicker form-control rounded-0" id="pickupGroupList" name="pickup_group" multiple
                                         data-live-search="true" data-max-options="3">
                                         <% group.forEach( grp => { %>
-                                            <option value="<%=grp.id%>"><%=grp.name%></option>
+                                        <option value="<%=grp.id%>"><%=grp.name%></option>
                                         <% }) %>
                                     </select>
                                 </div>
@@ -167,6 +167,7 @@
                                     </select>
                                 </div>
 
+                                <!-- buttons -->
                                 <div class="row">
                                     <%if(extension.extension){%>
                                     <div class="col-4">
@@ -189,6 +190,7 @@
                                     <%}%>
                     </div>
                 </form>
+
                 <!-- Modal -->
                 <div class="modal fade" id="respModal" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -208,11 +210,13 @@
                     </div>
                 </div>
                 
+                <!-- Scripts -->
                 <script>
                     $(document).ready(() => {
                         $('#codecList').selectpicker('val', $('#codecs').val().split(','));
                         $('#callGroupList').selectpicker('val', $('#call_group').val().split(','));
                         $('#pickupGroupList').selectpicker('val', $('#pickup_group').val().split(','));
+                        if ($('#codecs').val()) $('#codecList').next().find('.filter-option-inner-inner').text($('#codecs').val());
 
                         //GERAR SENHA
                         let passGen = $("#passGen");
@@ -236,20 +240,18 @@
                         });
 
                         //MANTER ORDEM DE SELEÇÃO DOS CODECS
-                        let codecs = [];
-                        $('#codecList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                        let codecs = ($('#codecs').val()) ? $('#codecs').val().split(',') : [];
+                        $('#codecList').on('changed.bs.select', function (e, clickedIndex, isSelected) {
                             var selected = this.options[clickedIndex].value;
-
-                            if (codecs.indexOf(selected) == -1) {
+                            if (isSelected) {
                                 codecs.push(selected);
                             } else {
-                                codecs.splice(codecs.indexOf(selected), 1);
+                                codecs = codecs.filter(function (e) { return e !== selected })
                             }
-                            if (codecs.length) {
-                                $(this).next().find('.filter-option-inner-inner').text(codecs.join(', '));
-                            }
+                            if (codecs.length) $(this).next().find('.filter-option-inner-inner').text(codecs.join(', '));
                             $('#codecs').val(codecs.join());
                         });
+
 
                         //Enviar dados do formulário com AJAX
                         $("form").submit(function (e) {
@@ -291,12 +293,11 @@
                     });
                 </script>
                 <%}%>
-                                </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </body>
 
 </html>
