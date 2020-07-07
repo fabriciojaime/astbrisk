@@ -119,10 +119,12 @@ module.exports = function Extension(extension, callerid, password, context, code
                 await db.query(sql3, sqlData3);
                 await db.commit();
                 callback(this.extension);
+                return this.extension;
             } catch (e) {
                 console.log(e.sqlMessage);
-                callback(false);
                 db.rollback();
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }
@@ -146,10 +148,12 @@ module.exports = function Extension(extension, callerid, password, context, code
                 await db.query(sql3, sqlData3);
                 await db.commit();
                 callback(this.extension);
+                return this.extension;
             } catch (e) {
                 console.log(e.sqlMessage);
-                callback(false);
                 db.rollback();
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }            
@@ -165,10 +169,12 @@ module.exports = function Extension(extension, callerid, password, context, code
                 await db.query("delete from ps_aors where id=?", [this.extension]);
                 await db.commit();
                 callback(true);
+                return true;
             } catch (e) {
                 console.log(e.sqlMessage);
-                callback(false);
                 db.rollback();
+                callback(false);
+                return false;
             } finally {
                 db.close();
             }

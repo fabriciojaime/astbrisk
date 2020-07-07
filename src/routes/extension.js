@@ -23,45 +23,34 @@ module.exports = (app)=>{
             res.render('extension',{title: 'Dados do ramal', extension: e, group: g})
     });
 
-    app.post('/extensions/create', (req, res)=>{
-        Extension(
-            req.body.extension,
-            req.body.callerid,
-            req.body.password,
-            req.body.context,
-            req.body.codecs,
-            req.body.max_contacts,
-            req.body.call_group,
-            req.body.pickup_group,
-            req.body.voicemail
-        )
-            .create((result)=>{
-                res.send(result);
-            });
-    }); 
+    app.post('/extensions/submit', async (req, res)=>{
+        let result,
+            exten = Extension(
+                req.body.extension,
+                req.body.callerid,
+                req.body.password,
+                req.body.context,
+                req.body.codecs,
+                req.body.max_contacts,
+                req.body.call_group,
+                req.body.pickup_group,
+                req.body.voicemail
+            );
 
-    app.post('/extensions/update', (req, res)=>{
-        Extension(
-            req.body.extension,
-            req.body.callerid,
-            req.body.password,
-            req.body.context,
-            req.body.codecs,
-            req.body.max_contacts,
-            req.body.call_group,
-            req.body.pickup_group,
-            req.body.voicemail
-        )
-            .update((result)=>{
-                res.send(result);;
-            });
+        switch(req.body.operation){
+            case 'create':
+                result = await exten.create();
+                break;
+            case 'update':
+                result = await exten.update();
+                break;
+            case 'delete':
+                result = await exten.delete();
+                break;
+            default:
+                result = false;
+        }
+
+        res.send(result);
     });
-
-    app.post('/extensions/delete', (req, res)=>{
-        Extension(req.body.extension)
-            .delete((result)=>{
-                res.send(result);;
-            });
-    }); 
-}
-  
+} 
