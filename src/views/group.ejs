@@ -1,0 +1,165 @@
+<%- include ('./partials/header.ejs') %>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <%- include ('./partials/navbar.ejs') %>
+            </div>
+
+            <div class="col-lg-11">
+                <div class="container p-5">
+                    <%if(group){%>
+                    <form method="POST">
+                        <input type="hidden" name="id" value="<%=group.id%>">
+                        <div class="card mb-3">
+                            <div class="card-header text-light bg-dark">
+                                <h3>Grupo</h3>
+                            </div>
+
+                            <div class="body-card p-3">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                        <label for="name" class="input-group-text rounded-0 col-12">Nome</label>
+                                    </div>
+                                    <input type="text" min="3" max="30" class="exten-select form-control rounded-0" id="name" name="name" value="<%=group.name%>" required>
+                                </div>
+
+                                <h4 class="text-center">Grupo de ligação</h4>
+
+                                <div class="container-fluid mb-3">
+                                    <div class="row">
+                                        <input type="text" placeholder="Filter" class="col exten-filter form-control rounded-0 text-center mr-2" data-target="extensionsCG">
+                                        <input type="text" placeholder="Filter" class="col exten-filter form-control rounded-0 text-center ml-2" data-target="call_members">
+                                    </div>
+                                    <div class="row">
+                                        <select id="extensionsCG" multiple size="8" class="col exten-select form-control rounded-0 mr-2">
+                                            <%extenAvail.call_members.forEach( e => {%>
+                                            <option value="<%=e.value%>"><%=e.text%></option>
+                                            <%})%>
+                                        </select>
+
+                                        <select id="call_members" multiple size="8" class="col exten-select form-control rounded-0 ml-2">
+                                            <%extenSlct.call_members.forEach( e => {%>
+                                            <option value="<%=e.value%>"><%=e.text%></option>
+                                            <%})%>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <h4 class="text-center">Grupo de captura</h4>
+
+                                <div class="container-fluid mb-3">
+                                    <div class="row">
+                                        <input type="text" placeholder="Filter" class="col exten-filter form-control rounded-0 text-center mr-2" data-target="extensionsPG">
+                                        <input type="text" placeholder="Filter" class="col exten-filter form-control rounded-0 text-center ml-2" data-target="pickup_members">
+                                    </div>
+                                    <div class="row">
+                                        <select id="extensionsPG" multiple size="8" class="col exten-select form-control rounded-0 mr-2">
+                                            <%extenAvail.pickup_members.forEach( e => {%>
+                                            <option value="<%=e.value%>"><%=e.text%></option>
+                                            <%})%>
+                                        </select>
+
+                                        <select id="pickup_members" multiple size="8" class="col exten-select form-control rounded-0 ml-2">
+                                            <%extenSlct.pickup_members.forEach( e => {%>
+                                            <option value="<%=e.value%>"><%=e.text%></option>
+                                            <%})%>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <%if(group.name){%>
+                                    <div class="col-6">
+                                        <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
+                                    </div>
+                                    <%}else{%>
+                                    <div class="col-12">
+                                        <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
+                                    </div>
+                                    <%}%>         
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            $(document).ready(() => {
+                                //Filtrar listas
+                                $('.exten-filter').keyup(function (e) {
+                                    let target = $(this).data('target'),
+                                        filter = $(this).val().toLowerCase();
+                                    $(`#${target} option`).filter(function () {
+                                        $(this).toggle($(this).text().toLowerCase().indexOf(filter) > -1)
+                                    });
+                                });
+
+                                //Transferir valores entre listas e ordenar as opções
+                                $('select').change(function () {
+                                    var $this = $(this);
+                                    $this.siblings('select').append($this.find('option:selected')); // append selected option to sibling
+                                    $('select', $this.parent()).each(function (i, v) { // loop through relative selects
+                                        var $options = $(v).find('option'); // get all options
+                                        $options = $options.sort(function (a, b) { // sort by value of options
+                                            return a.value - b.value;
+                                        });
+                                        $(this).html($options); // add new sorted options to select
+                                    });
+                                    $("select option:selected").prop("selected", false);
+                                });
+
+                                //Enviar dados do formulário com AJAX
+                                $("form").submit(function (e) {
+                                    e.preventDefault();
+
+                                    let data = $(this).serializeArray(),
+                                        operation = $(this).find("button[type=submit]:focus").val();
+
+                                    data.push(
+                                        { name: 'operation', value: operation },
+                                        { name: 'call_members', value: $.map($('#call_members option'), function (option) { return option.value; }) },
+                                        { name: 'pickup_members', value: $.map($('#pickup_members option'), function (option) { return option.value; }) }
+                                    );
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: 'submit',
+                                        data: data,
+                                        success: function (resp) {
+                                            if (resp) {
+                                                alert('Sucesso');
+                                                if(operation === 'delete'){
+                                                    window.location.href = "http://localhost/groups";
+                                                }else{
+                                                    window.location.href = "http://localhost/groups/edit?id="+resp.id;
+                                                }
+                                            } else {
+                                                alert('Falha');
+                                            }
+                                        }
+                                    });
+                                });
+
+                            });
+                        </script>
+
+                    </form>
+                    <%}else{%>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                        <p>Grupo inválido</p>
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

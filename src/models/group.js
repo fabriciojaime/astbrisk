@@ -2,7 +2,7 @@ const Common = require('./Common');
 const Database = require('./database');
 const Extension = require('./extension');
 
-module.exports = function Group(id, name, call_members, pickup_members) {
+module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
     return {
         id: id,
         name: name,
@@ -11,6 +11,7 @@ module.exports = function Group(id, name, call_members, pickup_members) {
 
         //OK
         makeSafe() {
+            this.id = (this.id) ? parseInt(this.id) : null;
             this.name = (this.name) ? Common.sanitizeString(this.name.toUpperCase()) : null;
             this.call_members = (typeof this.call_members === 'object') ? this.call_members : [];
             this.pickup_members = (typeof this.pickup_members === 'object') ? this.pickup_members : [];
@@ -25,8 +26,8 @@ module.exports = function Group(id, name, call_members, pickup_members) {
                 let rows = await db.query('\
                     select\
                         id, g.name,\
-                        (select group_concat(id) from ps_endpoints where FIND_IN_SET(g.id,call_group) > 0	) as call_members,\
-                        (select group_concat(id) from ps_endpoints where FIND_IN_SET(g.id,pickup_group) > 0 ) as pickup_members\
+                        (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,call_group) > 0	) as call_members,\
+                        (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,pickup_group) > 0 ) as pickup_members\
                     from asterisk.groups as g'
                 );
 
@@ -103,7 +104,7 @@ module.exports = function Group(id, name, call_members, pickup_members) {
             await this.makeSafe();
             try {
                 db.beginTransaction();
-                let row = await db.query("insert into asterisk.groups (name) values (?)", [this.name]);
+                let row = await db.query("insert into asterisk.groups (id, name) values (?,?)", [this.id, this.name]);
                 this.id = row.insertId;
 
                 for (let [idx, exten] of this.call_members.entries()) {
@@ -174,6 +175,7 @@ module.exports = function Group(id, name, call_members, pickup_members) {
 
         //OK
         async delete(callback = function(){}) {
+            this.makeSafe();
             let db = Database(),
                 sql1 = "UPDATE asterisk.ps_endpoints \
                 SET \
@@ -185,7 +187,7 @@ module.exports = function Group(id, name, call_members, pickup_members) {
                     pickup_group = \
                     TRIM(BOTH ',' FROM \
                       REPLACE( \
-                        REPLACE(CONCAT(',',REPLACE(pickup_group, ',', ',,'), ','),',?,', ''), ',,', ',') \
+                        REPLACE(CONCAT(',',REPLACE(pickup_group, ',', ',,'), ','),',?,', ''), ',,', ',')\
                     ) \
                 WHERE \
                   FIND_IN_SET(?, call_group) or FIND_IN_SET(?, pickup_group);",
@@ -199,7 +201,7 @@ module.exports = function Group(id, name, call_members, pickup_members) {
                 callback(true);
                 return true;
             } catch (e) {
-                console.log(e.sqlMessage);
+                console.log(e);
                 db.rollback();
                 callback(false);
                 return false;
