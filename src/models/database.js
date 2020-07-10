@@ -1,9 +1,9 @@
 const util = require('util');
 const mysql = require('mysql2');
-const config = require('../../external/dbconf');
+const config = require('../../external/config');
 
 module.exports = function Database() {
-    const connection = mysql.createConnection(config);
+    const connection = mysql.createConnection(config.database);
     return {
         query(sql, args) {
             return util.promisify(connection.query).call(connection, sql, args);

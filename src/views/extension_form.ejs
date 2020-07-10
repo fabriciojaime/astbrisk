@@ -221,7 +221,7 @@
                                     data.push({ name: 'operation', value: operation });
 
                                     if(operation === 'copy'){
-                                        window.location.href = 'http://localhost/extensions/new?copy='+$('#extension').val();
+                                        window.location.href = 'http://localhost/extension/new?copy='+$('#extension').val();
                                         return;
                                     } else if (operation !== 'create') {
                                         data.push({ name: 'extension', value: $('#extension').val() });
@@ -237,7 +237,7 @@
                                                 if(operation === 'delete'){
                                                     window.location.href = "http://localhost/extensions";
                                                 }else{
-                                                    window.location.href = "http://localhost/extensions/edit?id="+resp;
+                                                    window.location.href = "http://localhost/extension/edit?id="+resp;
                                                 }   
                                             } else {
                                                 alert('FALHA NA OPERAÇÃO!')

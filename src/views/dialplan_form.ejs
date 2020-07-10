@@ -1,0 +1,140 @@
+<%- include ('./partials/header.ejs') %>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <%- include ('./partials/navbar.ejs') %>
+            </div>
+
+            <div class="col-lg-11">
+                <div class="container p-5">
+                    <%if(dialplan){%>
+                    <form>
+                        <div class="card mb-3">
+                            <div class="card-header text-light bg-dark">
+                                <h3>Plano de Discagem</h3>
+                            </div>
+
+
+                            <div class="body-card p-3">
+                                <input type="hidden" id="id" name="id" value="<%=dialplan.id%>"">
+                                
+                                <div class=" input-group mb-3">
+                                <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                    <label for="name" class="input-group-text rounded-0 col-12">Contexto</label>
+                                </div>
+                                <input type="text" min="3" max="30" class="exten-select form-control rounded-0" id="context" name="context" value="<%=dialplan.context%>" required>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                    <label for="name" class="input-group-text rounded-0 col-12">Máscara</label>
+                                </div>
+                                <input type="text" min="3" max="30" class="exten-select form-control rounded-0" id="exten" name="exten" value="<%=dialplan.exten%>" required>
+                            </div>
+
+                            <h4>Procedimentos</h4>
+
+                            <%
+                            let proc = ( dialplan.proc.length === 0 ) ? [{app:null,appdata:null}] : dialplan.proc;
+                            
+                            proc.forEach( p => {%>
+                            <div class="input-group mb-3 procRow">
+                                <div class="col-lg-4 col-sm-12 p-0">
+                                    <input type="text" min="3" max="30" class="form-control rounded-0" name="app" value="<%=(p.app)?p.app:null%>" placeholder="Aplicação" required>
+                                </div>
+                                <div class="col-lg-6 col-sm-12 px-0 px-sm-2">
+                                    <input type="text" min="3" max="30" class="form-control rounded-0" name="appdata" value="<%=(p.appdata)?p.appdata:null%>" placeholder="Parâmetros">
+                                </div>
+                                <div class="input-group col-lg-2 px-0">
+                                    <label class="form-control btn btn-success rounded-0 border addProc"><i class="fas fa-plus-circle"></i></label>
+                                    <label class="form-control btn btn-danger rounded-0 border delProc"><i class="fas fa-minus-circle"></i></label>
+                                </div>
+                            </div>
+                            <%});%>
+
+                            <div class="row">
+                                <%if(dialplan.id){%>
+                                <div class="col-6">
+                                    <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
+                                </div>
+                                <%}else{%>
+                                <div class="col-12">
+                                    <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
+                                </div>
+                                <%}%>         
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            $(document).ready(() => {
+                                //Add nova linha de procedimento
+                                $('.addProc').click(function () {
+                                    let row = $(this).parent().parent();
+                                    row.clone(true)
+                                        .insertAfter(row)
+                                        .find('input').val('');
+                                });
+
+                                //Del linha de procedimento
+                                $('.delProc').click(function () {
+                                    if ($('.procRow').length > 1) {
+                                        $(this).parent().parent().remove();
+                                    } else {
+                                        $(this).parent().parent().find('input').val('');
+                                    }
+                                });
+
+                                //Enviar dados do formulário com AJAX
+                                $("form").submit(function (e) {
+                                    e.preventDefault();
+
+                                    let data = $(this).serializeArray(),
+                                        operation = $(this).find("button[type=submit]:focus").val();
+                                    
+                                    data.push({ name: 'operation', value: operation});
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: 'submit',
+                                        data: data,
+                                        success: function (resp) {
+                                            if (resp) {
+                                                alert('Sucesso');
+                                                if(operation === 'delete'){
+                                                    window.location.href = "http://localhost/dialplan";   
+                                                }else{
+                                                    window.location.href = "http://localhost/dialplan/edit?context="+resp.context+"&exten="+resp.exten;   
+                                                }                                             
+                                            } else {
+                                                alert('Falha');
+                                            }
+                                        }
+                                    });
+                                });
+
+                            });
+                        </script>
+
+                    </form>
+                    <%}else{%>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                        <p>Plano inválido</p>
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

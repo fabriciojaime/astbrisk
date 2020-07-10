@@ -4,14 +4,14 @@ module.exports = (app) => {
     var Extension = require('../models/extension')
     var Group = require('../models/group')
 
-    app.get('/groups', (req, res) => {
+    app.get('/group', (req, res) => {
         Group()
             .getAll((grp) => {
-                res.render('groups', { title: 'Grupos', group: grp });
+                res.render('group_list', { title: 'Grupos', group: grp });
             });
     })
 
-    app.get('/groups/new', async (req, res) => {
+    app.get('/group/new', async (req, res) => {
         let exten = await Extension().getAll(),
             group = await Group(),
             extenAvail = { call_members: [], pickup_members: [] },
@@ -23,10 +23,10 @@ module.exports = (app) => {
             extenAvail.pickup_members.push({ value: e.extension, text: text });
         });
 
-        res.render('group', { title: 'Grupo', group: group, extenAvail: extenAvail, extenSlct: extenSlct });
+        res.render('group_form', { title: 'Grupo', group: group, extenAvail: extenAvail, extenSlct: extenSlct });
     });
 
-    app.get('/groups/edit', async (req, res) => {
+    app.get('/group/edit', async (req, res) => {
         let exten = await Extension().getAll(),
             group = await Group(req.query['id']).get(),
             extenAvail = { call_members: [], pickup_members: [] },
@@ -50,10 +50,10 @@ module.exports = (app) => {
             });
         }
 
-        res.render('group', { title: 'Grupo', group: group, extenAvail: extenAvail, extenSlct: extenSlct });
+        res.render('group_form', { title: 'Grupo', group: group, extenAvail: extenAvail, extenSlct: extenSlct });
     });
 
-    app.post('/groups/submit', async (req, res) => {
+    app.post('/group/submit', async (req, res) => {
         let exten = Group(
             req.body.id,
             req.body.name,
