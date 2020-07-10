@@ -8,13 +8,13 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
         name: name,
         call_members: call_members,
         pickup_members: pickup_members,
-
+        
         //OK
         makeSafe() {
             this.id = (this.id) ? parseInt(this.id) : null;
             this.name = (this.name) ? Common.sanitizeString(this.name.toUpperCase()) : null;
-            this.call_members = (typeof this.call_members === 'object') ? this.call_members : [];
-            this.pickup_members = (typeof this.pickup_members === 'object') ? this.pickup_members : [];
+            this.call_members = (this.call_members) ? this.call_members : [];
+            this.pickup_members = (this.pickup_members) ? this.pickup_members : [];
         },
 
         //OK
@@ -32,7 +32,9 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                 );
 
                 for (let [idx, row] of rows.entries()) {
-                    await grpList.push(Group(row.id, row.name, row.call_members, row.pickup_members));
+                    let grp = Group(row.id, row.name, row.call_members, row.pickup_members);
+                    await grp.makeSafe();
+                    await grpList.push(grp);
                 }
                 callback(grpList);
                 return grpList;
@@ -62,6 +64,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                     this.name = row[0].name;
                     this.call_members = row[0].call_members;
                     this.pickup_members = row[0].pickup_members;
+                    this.makeSafe();
                     callback(this);
                     return this;
                 } else {
