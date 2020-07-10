@@ -59,18 +59,20 @@
 
                             <div class="row">
                                 <%if(dialplan.id){%>
-                                <div class="col-6">
+                                <div class="col">
                                     <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
                                 </div>
-                                <div class="col-6">
+                                <div class="col">
                                     <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
                                 </div>
                                 <%}else{%>
-                                <div class="col-12">
+                                <div class="col">
                                     <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
                                 </div>
-                                <%}%>         
-                                </div>
+                                <%}%>
+                                <div class="col">
+                                    <a href="http://localhost/dialplan" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
+                                </div>         
                             </div>
                         </div>
                         

@@ -49,7 +49,12 @@
                                     <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
                                         <label for="context" class="input-group-text rounded-0 col-12">Contexto</label>
                                     </div>
-                                    <input type="text" class="form-control rounded-0" id="context" name="context" value="<%=extension.context%>" required>
+                                    <select class="form-control rounded-0" id="context" name="context" required>
+                                        <option value=""></option>
+                                        <% context.forEach( c => { %>
+                                        <option value="<%=c.context%>" <%=(extension.context === c.context)?'selected':''%>><%=c.context%></option>
+                                        <% }) %>
+                                    </select>
                                 </div>
 
                                 <div class="input-group mb-3">
@@ -150,20 +155,23 @@
                                 <!-- buttons -->
                                 <div class="row">
                                     <%if(extension.extension){%>
-                                    <div class="col-4">
+                                    <div class="col">
                                         <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col">
                                         <button type="submit" value="copy" class="form-control btn btn-dark"><i class="fa fa-copy"></i> Copiar</button>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col">
                                         <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
                                     </div>
                                     <%}else{%>
-                                    <div class="col-12">
+                                    <div class="col">
                                         <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
                                     </div>
                                     <%}%>
+                                    <div class="col">
+                                        <a href="http://localhost/extension" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

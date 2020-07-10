@@ -74,17 +74,20 @@
 
                                 <div class="row">
                                     <%if(group.name){%>
-                                    <div class="col-6">
+                                    <div class="col">
                                         <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col">
                                         <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
                                     </div>
                                     <%}else{%>
-                                    <div class="col-12">
+                                    <div class="col">
                                         <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
                                     </div>
-                                    <%}%>         
+                                    <%}%>
+                                    <div class="col">
+                                        <a href="http://localhost/group" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
+                                    </div>           
                                 </div>
                             </div>
                         </div>
@@ -135,9 +138,9 @@
                                             if (resp) {
                                                 alert('Sucesso');
                                                 if(operation === 'delete'){
-                                                    window.location.href = "http://localhost/groups";
+                                                    window.location.href = "http://localhost/group";
                                                 }else{
-                                                    window.location.href = "http://localhost/groups/edit?id="+resp.id;
+                                                    window.location.href = "http://localhost/group/edit?id="+resp.id;
                                                 }
                                             } else {
                                                 alert('Falha');

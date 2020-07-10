@@ -1,6 +1,7 @@
 module.exports = (app)=>{
     const Extension = require('../models/extension');  
     const Group = require('../models/group');  
+    const Dialplan = require('../models/dialplan');  
  
     app.get('/extension', (req, res)=>{
         Extension()
@@ -12,15 +13,17 @@ module.exports = (app)=>{
     app.get('/extension/new', async (req, res)=>{
         let t = (req.query['copy']) ? `Cópia do ramal <${req.query['copy']}>` : 'Novo Ramal',
             e = (req.query['copy']) ? await Extension(req.query['copy']).get() : Extension(),
-            g = await Group().getAllNoMembers();
+            g = await Group().getAllNoMembers(),
+            c = await Dialplan().getContexts();
             e.extension = null; 
-            res.render('extension_form',{title: t, extension: e, group: g});
+            res.render('extension_form',{title: t, extension: e, context: c, group: g});
     });
     
     app.get('/extension/edit', async (req, res)=>{
         let e = await Extension(req.query['id']).get(),
-            g = await Group().getAllNoMembers();
-            res.render('extension_form',{title: 'Dados do ramal', extension: e, group: g})
+            g = await Group().getAllNoMembers(),
+            c = await Dialplan().getContexts()
+            res.render('extension_form',{title: 'Dados do ramal', extension: e, context: c, group: g})
     });
 
     app.post('/extension/submit', async (req, res)=>{

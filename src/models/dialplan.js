@@ -10,7 +10,7 @@ module.exports = function Dialplan(context, exten, proc = []) {
         proc: proc,
 
         makeSafe() {
-            this.context = (this.context) ? Common.sanitizeString(this.context.toUpperCase().replace(/\s/g, "-")) : null;
+            this.context = (this.context) ? Common.sanitizeString(this.context.toLowerCase().replace(/\s/g, "-")) : null;
             this.exten = (this.context) ? this.exten.toUpperCase() : null;
         },
 
@@ -100,6 +100,20 @@ module.exports = function Dialplan(context, exten, proc = []) {
                     callback(false);
                     return false;
                 }
+            } catch (e) {
+                console.log(e.sqlMessage);
+                callback(false);
+                return false;
+            } finally {
+                db.close();
+            }
+        },
+
+        async getContexts(callback = function () { }) {
+            let db = Database();
+
+            try {
+                return await db.query('select distinct context from extensions');
             } catch (e) {
                 console.log(e.sqlMessage);
                 callback(false);
