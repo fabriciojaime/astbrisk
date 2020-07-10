@@ -30,20 +30,20 @@
                                 <input type="text" min="3" max="30" class="exten-select form-control rounded-0" id="context" name="context" value="<%=dialplan.context%>" required>
                             </div>
 
+                            
+                            <h4>procsedimentos</h4>
+                            
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
                                     <label for="name" class="input-group-text rounded-0 col-12">Máscara</label>
                                 </div>
                                 <input type="text" min="3" max="30" class="exten-select form-control rounded-0" id="exten" name="exten" value="<%=dialplan.exten%>" required>
                             </div>
-
-                            <h4>Procedimentos</h4>
-
                             <%
-                            let proc = ( dialplan.proc.length === 0 ) ? [{app:null,appdata:null}] : dialplan.proc;
+                            let procs = ( dialplan.procs.length === 0 ) ? [{app:null,appdata:null}] : dialplan.procs;
                             
-                            proc.forEach( p => {%>
-                            <div class="input-group mb-3 procRow">
+                            procs.forEach( p => {%>
+                            <div class="input-group mb-3 procsRow">
                                 <div class="col-lg-4 col-sm-12 p-0">
                                     <input type="text" min="3" max="30" class="form-control rounded-0" name="app" value="<%=(p.app)?p.app:null%>" placeholder="Aplicação" required>
                                 </div>
@@ -51,8 +51,8 @@
                                     <input type="text" min="3" max="30" class="form-control rounded-0" name="appdata" value="<%=(p.appdata)?p.appdata:null%>" placeholder="Parâmetros">
                                 </div>
                                 <div class="input-group col-lg-2 px-0">
-                                    <label class="form-control btn btn-success rounded-0 border addProc"><i class="fas fa-plus-circle"></i></label>
-                                    <label class="form-control btn btn-danger rounded-0 border delProc"><i class="fas fa-minus-circle"></i></label>
+                                    <label class="form-control btn btn-success rounded-0 border addprocs"><i class="fas fa-plus-circle"></i></label>
+                                    <label class="form-control btn btn-danger rounded-0 border delprocs"><i class="fas fa-minus-circle"></i></label>
                                 </div>
                             </div>
                             <%});%>
@@ -78,17 +78,17 @@
                         
                         <script>
                             $(document).ready(() => {
-                                //Add nova linha de procedimento
-                                $('.addProc').click(function () {
+                                //Add nova linha de procsedimento
+                                $('.addprocs').click(function () {
                                     let row = $(this).parent().parent();
                                     row.clone(true)
                                         .insertAfter(row)
                                         .find('input').val('');
                                 });
 
-                                //Del linha de procedimento
-                                $('.delProc').click(function () {
-                                    if ($('.procRow').length > 1) {
+                                //Del linha de procsedimento
+                                $('.delprocs').click(function () {
+                                    if ($('.procsRow').length > 1) {
                                         $(this).parent().parent().remove();
                                     } else {
                                         $(this).parent().parent().find('input').val('');
