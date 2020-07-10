@@ -17,8 +17,15 @@ module.exports = (app) => {
     })
 
     app.get('/dialplan/edit', async (req, res) => {
-        let dlpn = await Dialplan( req.query['context'], req.query['exten']).get();
-        res.render('dialplan_form', { title: 'Planos de discagem', dialplan: dlpn });
+        if(req.query['context'] && req.query['exten']){
+            let dlpn = await Dialplan( req.query['context'], req.query['exten']).get();
+            console.log(dlpn);
+            res.render('dialplan_form', { title: 'Planos de discagem', dialplan: dlpn });
+        }else if(req.query['context']){
+            let dlpn = await Dialplan( req.query['context']).getByContext();
+            console.log(dlpn);
+            res.render('dialplan_form', { title: 'Planos de discagem', dialplan: dlpn });
+        }
     })
 
     app.post('/dialplan/submit', async (req, res) => {
@@ -27,7 +34,7 @@ module.exports = (app) => {
 
         dpln.id = req.body.id;
         for(let[idx,val] of req.body.app.entries()){
-            await dpln.proc.push({app: val, appdata: req.body.appdata[idx]});
+            await dpln.procs.push({app: val, appdata: req.body.appdata[idx]});
         }
 
         switch (req.body.operation) {

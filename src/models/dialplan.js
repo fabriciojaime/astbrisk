@@ -1,13 +1,12 @@
 const Common = require('./Common'),
     Database = require('./database');
-const { getDefaultFlags } = require('mysql2/lib/connection_config');
 
-module.exports = function Dialplan(context, exten, proc = []) {
+module.exports = function Dialplan(context, exten, procs = []) {
     return {
         id: null,
         context,
         exten,
-        proc: proc,
+        procs: procs,
 
         makeSafe() {
             this.context = (this.context) ? Common.sanitizeString(this.context.toLowerCase().replace(/\s/g, "-")) : null;
@@ -23,7 +22,7 @@ module.exports = function Dialplan(context, exten, proc = []) {
                 if (rows.length) {
                     this.id = `${this.context},${this.exten}`;
                     rows.forEach(async r => {
-                        await this.proc.push({
+                        await this.procs.push({
                             id: r.id,
                             priority: r.priority,
                             app: r.app,
@@ -53,7 +52,7 @@ module.exports = function Dialplan(context, exten, proc = []) {
                 let rows = await db.query('select * from extensions');
                 if (rows.length) {
                     rows.forEach(async r => {
-                        await this.proc.push({
+                        await this.procs.push({
                             id: r.id,
                             context: r.context,
                             exten: r.exten,
@@ -62,9 +61,9 @@ module.exports = function Dialplan(context, exten, proc = []) {
                             appdata: r.appdata
                         });
                     });
-                    this.proc['brief'] = await db.query('select context, exten, count(exten) as procs from asterisk.extensions group by context, exten;');
-                    callback(this.proc);
-                    return this.proc;
+                    this.procs['brief'] = await db.query('select context, exten, count(exten) as procss from asterisk.extensions group by context, exten;');
+                    callback(this.procs);
+                    return this.procs;
                 } else {
                     callback(false);
                     return false;
@@ -84,18 +83,21 @@ module.exports = function Dialplan(context, exten, proc = []) {
             try {
                 let rows = await db.query('select * from extensions where context=?', [this.context]);
                 if (rows.length) {
+                    let dlpnFull = [{context: this.context}];
                     rows.forEach(async r => {
-                        await this.proc.push({
-                            id: r.id,
-                            exten: r.exten,
-                            priority: r.priority,
-                            app: r.app,
-                            appdata: r.appdata
-                        });
+                        dlpnFull.push(
+                            [{
+                                exten: r.exten,
+                                procs:{
+                                    app: r.app,
+                                    appdata: r.appdata
+                                }
+                            }]
+                        );
                     });
 
-                    callback(this);
-                    return this;
+                    callback(dlpnFull);
+                    return dlpnFull;
                 } else {
                     callback(false);
                     return false;
@@ -129,9 +131,9 @@ module.exports = function Dialplan(context, exten, proc = []) {
             try {
                 await this.makeSafe();
                 await db.beginTransaction();
-                //A CADA ITERAÇÃO DE 'proc' FEITA PELO 'for', 'idx' SERÁ O ÍNDICE E 'proc' SERÁ O VALOR
-                for (let [idx, proc] of this.proc.entries()) {
-                    await db.query(sql, [this.context, this.exten, idx + 1, proc.app, proc.appdata]);
+                //A CADA ITERAÇÃO DE 'procs' FEITA PELO 'for', 'idx' SERÁ O ÍNDICE E 'procs' SERÁ O VALOR
+                for (let [idx, procs] of this.procs.entries()) {
+                    await db.query(sql, [this.context, this.exten, idx + 1, procs.app, procs.appdata]);
                 }
                 await db.commit();
                 await this.get();
