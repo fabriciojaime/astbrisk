@@ -13,24 +13,31 @@
                 <div class="container p-5">
                     <div class="card">
                         <div class="card-header text-light bg-dark">
-                            <h3>Grupos</h3>
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Plano de Discagem</h3>
+                                </div>
+                                <div class="col">
+                                    <a href="dialplan/new" class="btn btn-primary float-right">Novo Plano</a>
+                                </div>
+                            </div>
                         </div>
                         <div class="body-card p-2">
-                            <% if(group){%>
+                            <% if(dialplan){%>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Nome</th>
-                                        <th>Grupo de ligação</th>
-                                        <th>Grupo de captura</th>
+                                        <th>Contexto</th>
+                                        <th>Mascára</th>
+                                        <th>Qtd. Procedimentos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% group.forEach( grp => {%>
+                                    <% dialplan['brief'].forEach( dlp => {%>
                                     <tr>
-                                        <td><a href="groups/edit?id=<%=grp.id%>"><%=grp.name%></a></td>
-                                        <td><%=grp.call_members.length%></td>
-                                        <td><%=grp.pickup_members.length%></td>
+                                        <td><a href="dialplan/edit?context=<%=dlp.context%>"><%=dlp.context%></a></td>
+                                        <td><a href="dialplan/edit?context=<%=dlp.context%>&exten=<%=dlp.exten%>"><%=dlp.exten%></a></td>
+                                        <td><%=dlp.procs%></td>
                                     </tr>
                                     <%})%>
                                 </tbody>

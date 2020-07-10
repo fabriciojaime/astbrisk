@@ -1,0 +1,58 @@
+<%- include ('./partials/header.ejs') %>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <%- include ('./partials/navbar.ejs') %>
+            </div>
+            <div class="col-lg-11">
+                <div class="container p-5">
+                    <div class="card">
+                        <div class="card-header text-light bg-dark">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Grupos</h3>
+                                </div>
+                                <div class="col">
+                                    <a href="group/new" class="btn btn-primary float-right">Novo Grupo</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="body-card p-2">
+                            <% if(group){%>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Grupo de ligação</th>
+                                        <th>Grupo de captura</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% group.forEach( grp => {%>
+                                    <tr>
+                                        <td><a href="group/edit?id=<%=grp.id%>"><%=grp.name%></a></td>
+                                        <td><%=grp.call_members.length%></td>
+                                        <td><%=grp.pickup_members.length%></td>
+                                    </tr>
+                                    <%})%>
+                                </tbody>
+                            </table>
+                            <%}else{%>
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                                <p>Ocorreu uma falha ao tentar obter os dados.</p>
+                            </div>
+                            <%}%>     
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

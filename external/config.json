@@ -1,0 +1,15 @@
+{
+    "database":{
+        "user":"asterisk",
+        "password":"asterisk",
+        "database":"asterisk",
+        "host":"localhost",
+        "connectionLimit":10
+    },
+    "ami":{
+        "user": "asterisk",
+        "password": "asterisk",
+        "port": 5038,
+        "host": "localhost"
+    }
+ }
