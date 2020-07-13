@@ -1,5 +1,7 @@
 const Common = require('./Common'),
-    Database = require('./database');
+    Database = require('./database'),
+    AMI = require('./ami'),
+    fs = require('fs');
 
 module.exports = function Dialplan(context, exten, procs = []) {
     return {
@@ -135,12 +137,16 @@ module.exports = function Dialplan(context, exten, procs = []) {
                 for (let [idx, procs] of this.procs.entries()) {
                     await db.query(sql, [this.context, this.exten, idx + 1, procs.app, procs.appdata]);
                 }
+                
                 await db.commit();
+
+                this.syncDialplan();
+
                 await this.get();
                 callback(this);
                 return this;
             } catch (e) {
-                console.log(e.sqlMessage);
+                console.log(e);
                 db.rollback();
                 callback(false);
                 return false;
@@ -192,6 +198,9 @@ module.exports = function Dialplan(context, exten, procs = []) {
             if (sql) {
                 try {
                     let result = await db.query(sql, [this.context, this.exten]);
+
+                    this.syncDialplan();
+
                     callback(result.affectedRows);
                     return result.affectedRows;
                 } catch (e) {
@@ -206,6 +215,25 @@ module.exports = function Dialplan(context, exten, procs = []) {
                 callback(false);
                 return false;
             }
+        },
+        
+        async syncDialplan(callback = function () { }){
+            let ami = AMI(),
+                ctx = '',
+                ctxDB = [];
+
+            // OBTER CONTEXTO DO DB E GRAVAR NO ARQUIVO 
+            ctxDB = await this.getContexts();
+            for (let [idx, c] of ctxDB.entries()) {
+                ctx += `[${c.context}]\nSwitch=Realtime/@\n`;
+            }
+            // ALTERAR DESTINO EXTENSIONS.CONF
+            //fs.writeFileSync('C:/Users/fabri/Documents/DEV/Projects/ASTERISK/external/extensions.conf', ctx);
+            fs.writeFileSync('/etc/asterisk/extensions.conf', ctx);
+
+            await ami.action({'action':'command','command':'dialplan reload'});
+            
+            ami.close();
         }
     }
 }

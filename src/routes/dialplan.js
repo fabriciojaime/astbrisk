@@ -33,6 +33,8 @@ module.exports = (app) => {
         result;
 
         dpln.id = req.body.id;
+        req.body.app = (typeof req.body.app === "string")?[req.body.app]:req.body.app;
+        req.body.appdata = (typeof req.body.appdata === "string")?[req.body.appdata]:req.body.appdata;
         for(let[idx,val] of req.body.app.entries()){
             await dpln.procs.push({app: val, appdata: req.body.appdata[idx]});
         }
