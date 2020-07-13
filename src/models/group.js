@@ -1,4 +1,4 @@
-const Common = require('./Common');
+const Common = require('./common');
 const Database = require('./database');
 const Extension = require('./extension');
 

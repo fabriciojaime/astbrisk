@@ -1,4 +1,4 @@
-const Common = require('./Common'),
+const Common = require('./common'),
     Database = require('./database'),
     AMI = require('./ami'),
     fs = require('fs');

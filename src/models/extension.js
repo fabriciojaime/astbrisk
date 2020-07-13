@@ -1,4 +1,4 @@
-const Common = require('./Common');
+const Common = require('./common');
 const Database = require('./database');
 
 module.exports = function Extension(extension, callerid, password, context, codecs, max_contacts, call_group, pickup_group, voicemail, user_agent, last_use, status) {
