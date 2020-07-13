@@ -19,11 +19,9 @@ module.exports = (app) => {
     app.get('/dialplan/edit', async (req, res) => {
         if(req.query['context'] && req.query['exten']){
             let dlpn = await Dialplan( req.query['context'], req.query['exten']).get();
-            console.log(dlpn);
             res.render('dialplan_form', { title: 'Planos de discagem', dialplan: dlpn });
         }else if(req.query['context']){
             let dlpn = await Dialplan( req.query['context']).getByContext();
-            console.log(dlpn);
             res.render('dialplan_form', { title: 'Planos de discagem', dialplan: dlpn });
         }
     })
