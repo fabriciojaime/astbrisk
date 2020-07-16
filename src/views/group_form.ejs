@@ -86,7 +86,7 @@
                                     </div>
                                     <%}%>
                                     <div class="col">
-                                        <a href="http://localhost/group" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
+                                        <a href="./" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
                                     </div>           
                                 </div>
                             </div>
@@ -94,6 +94,7 @@
                         
                         <script>
                             $(document).ready(() => {
+                                console.log(document.referrer);
                                 //Filtrar listas
                                 $('.exten-filter').keyup(function (e) {
                                     let target = $(this).data('target'),
@@ -138,9 +139,9 @@
                                             if (resp) {
                                                 alert('Sucesso');
                                                 if(operation === 'delete'){
-                                                    window.location.href = "http://localhost/group";
+                                                    window.location.href = "./";
                                                 }else{
-                                                    window.location.href = "http://localhost/group/edit?id="+resp.id;
+                                                    window.location.href = "./edit?id="+resp.id;
                                                 }
                                             } else {
                                                 alert('Falha');

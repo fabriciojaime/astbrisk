@@ -18,7 +18,7 @@
                                     <h3>Ramal</h3>
                                 </div>
                                 <div class="col">
-                                    <a href="extension/new" class="btn btn-primary float-right">Novo Ramal</a>
+                                    <a href="./new" class="btn btn-primary float-right">Novo Ramal</a>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                 <tbody>
                                     <% extensions.forEach( ext => {%>
                                     <tr>
-                                        <td><a href="extension/edit?id=<%=ext.extension%>"><%=ext.extension%></a></td>
+                                        <td><a href="./edit?id=<%=ext.extension%>"><%=ext.extension%></a></td>
                                         <td><%=ext.callerid%></td>
                                         <td><%=ext.context%></td>
                                         <td><%=ext.user_agent%></td>

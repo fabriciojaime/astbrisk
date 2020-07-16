@@ -71,7 +71,7 @@
                                 </div>
                                 <%}%>
                                 <div class="col">
-                                    <a href="http://localhost/dialplan" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
+                                    <a href="./" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
                                 </div>         
                             </div>
                         </div>
@@ -112,9 +112,9 @@
                                             if (resp) {
                                                 alert('Sucesso');
                                                 if(operation === 'delete'){
-                                                    window.location.href = "http://localhost/dialplan";   
+                                                    window.location.href = "./";   
                                                 }else{
-                                                    window.location.href = "http://localhost/dialplan/edit?context="+resp.context+"&exten="+resp.exten;   
+                                                    window.location.href = "./edit?context="+resp.context+"&exten="+resp.exten;   
                                                 }                                             
                                             } else {
                                                 alert('Falha');
