@@ -16,3 +16,8 @@ module.exports = function AMI() {
         }
     };
 }
+/*
+const ami = new AsteriskManager(config.ami.port, config.ami.host, config.ami.user, config.ami.password, true);
+ami.on('managerevent', function(evt) {
+    console.log(evt);
+});*/

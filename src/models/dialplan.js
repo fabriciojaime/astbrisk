@@ -229,7 +229,7 @@ module.exports = function Dialplan(context, exten, procs = []) {
             }
             // ALTERAR DESTINO EXTENSIONS.CONF
             //fs.writeFileSync('C:/Users/fabri/Documents/DEV/Projects/ASTERISK/external/extensions.conf', ctx);
-            fs.writeFileSync('/etc/asterisk/extensions.conf', ctx);
+            fs.writeFileSync('/etc/asterisk/res_extensions.conf', ctx);
 
             await ami.action({'action':'command','command':'dialplan reload'});
             

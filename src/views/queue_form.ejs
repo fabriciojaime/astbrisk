@@ -1,0 +1,542 @@
+<%- include ('./partials/header.ejs') %>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <%- include ('./partials/navbar.ejs') %>
+            </div>
+            <div class="col-lg-11">
+                <div class="container p-5">
+                    <%if(queue){%>
+
+                    <form>
+                        <div class="card">
+                            <div class="card-header text-light bg-dark">
+                                <h3><%=title%></h3>
+                            </div>
+                            <div class="body-card p-3">
+
+
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active text-dark" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">GERAL</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" id="profile-tab" data-toggle="tab" href="#perfil" role="tab" aria-controls="profile" aria-selected="false">P/ MEMBRO</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" id="contact-tab" data-toggle="tab" href="#contato" role="tab" aria-controls="contact" aria-selected="false">P/ USUARIO</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="myTabContent">
+
+                                    <!-- ABA FILA -->
+                                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <br>
+                                        <input type="hidden" name="id" value="<%=queue.id%>">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="callerid" class="input-group-text rounded-0 col-12">Nome</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="callerid" name="name" value="<%=queue.name%>" required>
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="strategyList" class="input-group-text rounded-0 col-12">Estratégia</label>
+                                            </div>
+                                            <input type="hidden" id="strategy" value="<%=queue.strategy%>">
+                                            <select class="selectpicker form-control rounded-0" id="strategyList" name="strategy"" data-live-search="true" required>
+                                                <option value="fewestcalls">fewestcalls</option>
+                                                <option value="leastrecent">leastrecent</option>
+                                                <option value="linear">linear</option>
+                                                <option value="random">random</option>
+                                                <option value="ringall">ringall</option>
+                                                <option value="rrmemory">rrmemory</option>
+                                                <option value="wrandom">wrandom</option>
+                                            </select>
+                                            <input type="hidden" id="autofill" value="<%=queue.autofill%>">
+                                            <label for="autofill" class="input-group-text rounded-0 col-2">Auto Completar   
+                                                <div class="form-check" id="autofillCheck">
+                                                    <input class="form-check-input position-static mt-2" type="checkbox" value="yes" name="autofill">
+                                                </div>
+                                            </label>                                            
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="weight" class="input-group-text rounded-0 col-12">Peso (n)</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="weight" name="weight" value="<%=queue.weight%>">
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="servicelevel" class="input-group-text rounded-0 col-12">SLA (s)</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="servicelevel" name="servicelevel" value="<%=queue.servicelevel%>">
+                                        </div>
+
+                                        <div class="input-group mb-3">        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="monitor_formatList" class="input-group-text rounded-0 col-12">Gravar Ligações</label>
+                                            </div>
+                                            
+                                            <input type="hidden" id="record" value="<%=queue.monitor_format%>">
+                                            <select class="selectpicker form-control rounded-0" name="record" id="recordList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- ABA MEMBRO -->                                    
+                                    <div class="tab-pane fade" id="perfil" role="tabpanel" aria-labelledby="profile-tab">
+                                        <br>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="timeout" class="input-group-text rounded-0 col-12">Timeout (s)</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="timeout" name="timeout" value="<%=queue.timeout%>" required>                                            
+                                            
+                                            <input type="hidden" id="timeoutpriority" value="<%=queue.timeoutpriority%>">
+                                            <div class="btn-group btn-group-toggle mr-2" data-toggle="buttons" id="timeoutpriorityList">
+                                                <label class="btn btn-secondary"><input type="radio" name="options" id="option1" value="app">Dialplan</label>
+                                                <label class="btn btn-secondary"><input type="radio" name="options" id="option2" value="conf">DB</label>
+                                            </div> 
+
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="retry" class="input-group-text rounded-0 col-12">Retry (s)</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="retry" name="retry" value="<%=queue.retry%>">
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="ringinuseList" class="input-group-text rounded-0 col-12">Tocar em uso</label>
+                                            </div>
+                                            <input type="hidden" id="ringinuse" value="<%=queue.ringinuse%>">
+                                            <select class="selectpicker form-control rounded-0" name="ringinuse" id="ringinuseList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="autopauseList" class="input-group-text rounded-0 col-12">Auto Pause</label>
+                                            </div>
+                                            <input type="hidden" id="autopause" value="<%=queue.autopause%>">
+                                            <select class="selectpicker form-control rounded-0" name="autopause" id="autopauseList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="wrapuptime" class="input-group-text rounded-0 col-12">(s) Entre chamadas</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="wrapuptime" name="wrapuptime" value="<%=queue.wrapuptime%>">
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="reportholdtimeList" class="input-group-text rounded-0 col-12">Reportar Tempo</label>
+                                            </div>
+                                            <input type="hidden" id="reportholdtime" value="<%=queue.reportholdtime%>">
+                                            <select class="selectpicker form-control rounded-0" name="reportholdtime" id="reportholdtimeList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="penaltymemberslimit" class="input-group-text rounded-0 col-12">Penalty Member Limit</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="penaltymemberslimit" name="penaltymemberslimit" value="<%=queue.penaltymemberslimit%>">
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="defaultrule" class="input-group-text rounded-0 col-12">Default Rule</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="defaultrule" name="defaultrule" value="<%=queue.defaultrule%>">
+                                        </div>
+
+                                    </div>
+
+                                    <!-- ABA USUARIO -->
+                                    <div class="tab-pane fade" id="contato" role="tabpanel" aria-labelledby="contact-tab">
+                                        <br>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="musiconhold" class="input-group-text rounded-0 col-12">Music on Hold</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="musiconhold" name="musiconhold" value="<%=queue.musiconhold%>">
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="context" class="input-group-text rounded-0 col-12">Context</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="context" name="context" value="<%=queue.context%>">
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="joinEmptyList" class="input-group-text rounded-0 col-12">Join Empty</label>
+                                            </div>
+                                            <input type="hidden" id="joinempty" value="<%=queue.joinempty%>">
+                                            <select class="selectpicker form-control rounded-0" name="joinempty" id="joinemptyList" multiple data-live-search="true" data-max-options="8">
+                                                <option value="inuse">inuse</option>
+                                                <option value="invalid">invalid</option>
+                                                <option value="paused">paused</option>
+                                                <option value="penalty">penalty</option>
+                                                <option value="ringing">ringing</option>
+                                                <option value="unavailable">unavailable</option>
+                                                <option value="unknown">unknown</option>
+                                                <option value="wrapup">wrapup</option>
+                                            </select>
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="leavewhenemptyList" class="input-group-text rounded-0 col-12">Leave When Empty</label>
+                                            </div>
+                                            <input type="hidden" id="leavewhenempty" value="<%=queue.leavewhenempty%>">
+                                            <select class="selectpicker form-control rounded-0" name="leavewhenempty" id="leavewhenemptyList" multiple data-live-search="true" data-max-options="8">
+                                                <option value="inuse">inuse</option>
+                                                <option value="invalid">invalid</option>
+                                                <option value="paused">paused</option>
+                                                <option value="penalty">penalty</option>
+                                                <option value="ringing">ringing</option>
+                                                <option value="unavailable">unavailable</option>
+                                                <option value="unknown">unknown</option>
+                                                <option value="wrapup">wrapup</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="announce_positionList" class="input-group-text rounded-0 col-12">Anunciar Posição</label>
+                                            </div>
+                                            <input type="hidden" id="announce_position" value="<%=queue.announce_position%>">
+                                            <select class="selectpicker form-control rounded-0" name="announce_position" id="announce_positionList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="announce_holdtimeList" class="input-group-text rounded-0 col-12">Anunciar Tempo</label>
+                                            </div>
+                                            <input type="hidden" id="announce_holdtime" value="<%=queue.announce_holdtime%>">
+                                            <select class="selectpicker form-control rounded-0" name="announce_holdtime" id="announce_holdtimeList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+                                        </div>
+        
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="announce_frequency" class="input-group-text rounded-0 col-12">Frequência P(s)</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="announce_frequency" name="announce_frequency" value="<%=queue.announce_frequency%>">
+        
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="announce_round_seconds" class="input-group-text rounded-0 col-12">Frquência T(s)</label>
+                                            </div>
+                                            <input type="text" class="form-control rounded-0" id="announce_round_seconds" name="announce_round_seconds" value="<%=queue.announce_round_seconds%>">
+                                        </div>
+        
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend col-lg-2 col-md-3 col-sm-6 p-0">
+                                                <label for="announce_to_first_userList" class="input-group-text rounded-0 col-12">Anunciar n°1 da Fila</label>
+                                            </div>
+                                            <input type="hidden" id="announce_to_first_user" value="<%=queue.announce_to_first_user%>">
+                                            <select class="selectpicker form-control rounded-0" name="announce_to_first_user" id="announce_to_first_userList" data-live-search="true" required>
+                                                <option value="no">Não</option>
+                                                <option value="yes">Sim</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
+                                <%if(queue.id){%>
+                                <div class="card-header text-light bg-dark">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h3>Membros</h3>
+                                        </div>
+                                        <div class="col">
+                                            <a class="btn btn-primary float-right" id="newmember">Novo Membro</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div id="addmember">
+                                        <table class="table text-center">
+                                              <tbody class="col">
+                                                    <tr>
+                                                        <td>                                                            
+                                                            <select class="selectpicker rounded-0" data-live-search="true" name="member">
+                                                                <% extensions.forEach(ext => { %>
+                                                                    <option value="<%=ext.extension%>">PJSIP/<%=ext.extension%></option>                                                                    
+                                                                <%})%>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-success" type="submit" value="addmember">ADICIONAR</button>
+                                                            <button class="btn btn-danger" type="submit" value="deletemember">REMOVER</button>
+                                                        </td>
+                                                    </tr> 
+                                                </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                        
+
+                                    <table class="table text-center">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">interface</th>
+                                            <th scope="col">membername</th>
+                                            <th scope="col">state_interface</th>
+                                            <th scope="col">penalty</th>
+                                            <th scope="col">paused</th>
+                                            <th scope="col">wrapuptime</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        <%  let count = 0;
+                                            queueMember.forEach(qmember => {                                             
+                                            if(qmember.queue_name == queue.name){ %>
+                                                <tr>                                            
+                                                    <th scope="row"><input type="hidden" name="memberid" value="<%=qmember.uniqueid%>"><%= count += 1 %></th>
+                                                    <td><%=qmember.interface%></td>
+                                                    <td><%=qmember.membername%></td>
+                                                    <td><%=qmember.state_interface%></td>
+                                                    <td><%=qmember.penalty%></td>
+                                                    <td><%=qmember.paused%></td>
+                                                    <td><%=qmember.wrapuptime%></td>
+                                                </tr>                                          
+                                        <%}})%>
+                                        </tbody>
+                                      </table>    
+                                
+
+
+
+                                <br>
+                                <%}%>                                
+                                <!-- buttons -->
+                                <div class="row">
+                                    <%if(queue.id){%>
+                                    <div class="col">
+                                        <button type="submit" value="update" class="form-control btn btn-dark"><i class="fa fa-save"></i> Atualizar</button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" value="delete" class="form-control btn btn-dark"><i class="fa fa-trash-alt"></i> Excluir</button>
+                                    </div>
+                                    <%}else{%>
+                                    <div class="col">
+                                        <button type="submit" value="create" class="form-control btn btn-dark"><i class="fa fa-save"></i> Salvar</button>
+                                    </div>
+                                    <%}%>
+                                    <div class="col">
+                                        <a href="./" class="form-control btn btn-dark"><i class="fas fa-undo"></i> Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scripts -->
+                        <script>
+
+                            $(document).ready(() => {
+                                //Filtrar listas
+                                $('.exten-filter').keyup(function (e) {
+                                    let target = $(this).data('target'),
+                                        filter = $(this).val().toLowerCase();
+                                    $(`#${target} option`).filter(function () {
+                                        $(this).toggle($(this).text().toLowerCase().indexOf(filter) > -1)
+                                    });
+                                });
+
+                                //MANTER ORDEM DE SELEÇÃO GERAL                                                             
+                                let strategy = $('#strategy').val();                                  
+                                $('#strategyList option').each(function(){
+                                    if($(this).text() == strategy){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                let autofill = $('#autofill').val();                                  
+                                $('#autofillCheck input').each(function(){
+                                    if(autofill == 'yes'){
+                                        $(this).attr('checked', true);
+                                    }
+                                });
+
+                                let record = $('#record').val();                                                                                                                                
+                                $('#recordList option').each(function(){
+                                    let result;
+                                    record == 'wav'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                //MANTER ORDEM DE SELEÇÃO P/MEMBRO
+                                let timeoutpriority = $('#timeoutpriority').val();                                                                                                                               
+                                $('#timeoutpriorityList label').each(function(){
+                                    let result; 
+                                    timeoutpriority == 'app'? result = 'Dialplan':result ='DB';
+                                    if($(this).text() == result){
+                                        $(this).each(function(){
+                                            $(this).children().attr('checked', true)
+                                        })
+                                    }
+                                });
+
+                                let ringinuse = $('#ringinuse').val();                                                                                                                                
+                                $('#ringinuseList option').each(function(){
+                                    let result;
+                                    ringinuse == 'yes'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                let autopause = $('#autopause').val();                                                                                                                                
+                                $('#autopauseList option').each(function(){
+                                    let result;
+                                    autopause == 'yes'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                let reportholdtime = $('#reportholdtime').val();                                                                                                                                
+                                $('#reportholdtimeList option').each(function(){
+                                    let result;
+                                    reportholdtime == 'yes'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                //MANTER ORDEM DE SELEÇÃO P/USER
+                                let joinempty = ($('#joinempty').val()) ? $('#joinempty').val().split(',') : [];
+                                joinempty.forEach(function(ev){
+                                    $('#joinemptyList option').each(function(){
+                                        if($(this).text() == ev){
+                                            $(this).attr('selected', true);
+                                        };
+                                    })
+                                });
+
+                                let leavewhenempty = ($('#leavewhenempty').val()) ? $('#leavewhenempty').val().split(',') : [];
+                                leavewhenempty.forEach(function(ev){
+                                    $('#leavewhenemptyList option').each(function(){
+                                        if($(this).text() == ev){
+                                            $(this).attr('selected', true);
+                                        };
+                                    })
+                                });
+
+                                let announce_to_first_user = $('#announce_to_first_user').val();                                                                                                                                
+                                $('#announce_to_first_userList option').each(function(){
+                                    let result;
+                                    announce_to_first_user == 'yes'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                let announce_position = $('#announce_position').val();                                                                                                                                
+                                $('#announce_positionList option').each(function(){
+                                    let result;
+                                    announce_position == 'yes'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+                                let announce_holdtime = $('#announce_holdtime').val();                                                                                                                                
+                                $('#announce_holdtimeList option').each(function(){
+                                    let result;
+                                    announce_holdtime == 'yes'? result = 'Sim':result ='Não';
+                                    if($(this).text() == result){
+                                        $(this).attr('selected', true);
+                                    }
+                                });
+
+
+                                //MEMBROS DA PAGINA                                
+                                $('#addmember').css('display','none');
+                                $('#newmember').click(function(e){
+                                    $('#addmember').show(300);
+                                });
+
+                                //Enviar dados do formulário com AJAX
+                                $("form").submit(function (e) {
+                                    e.preventDefault();
+
+                                    let data = $(this).serializeArray(),
+                                        operation = $(this).find("button[type=submit]:focus").val();
+                                        console.log(operation);
+                                    data.push(
+                                        { name: 'operation', value: operation },                                        
+                                    );
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: 'submit',
+                                        data: data,
+                                        success: function (resp) {
+                                            if (resp) { 
+                                                switch(operation){
+                                                    case 'delete':
+                                                        alert('Sucesso');
+                                                        window.location.href = "./";
+                                                        break;
+                                                    case 'addmember':
+                                                        window.location.href = "./edit?id=" + resp;
+                                                        break;
+                                                    case 'deletemember':
+                                                        window.location.href = "./edit?id=" + resp;
+                                                        break;
+                                                    default:
+                                                        alert('Sucesso');
+                                                        window.location.href = "./edit?id=" + resp.id;
+                                                }
+
+                                                /*
+                                                if (operation === 'delete') {
+                                                    window.location.href = "./";
+                                                } else {
+                                                    window.location.href = "./edit?id=" + resp.id;
+                                                }
+                                                */
+
+                                            } else {
+                                                alert('Falha');
+                                            }
+                                        }
+                                    });
+                                });
+
+                            });
+                        </script>
+                    </form>
+
+                    <%}else{%>
+
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                            <p>Fila inválida</p>
+                        </div>
+
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

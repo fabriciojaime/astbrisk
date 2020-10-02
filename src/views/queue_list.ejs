@@ -1,0 +1,75 @@
+<%- include ('./partials/header.ejs') %>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="page-wrapper chiller-theme toggled">
+                <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <%- include ('./partials/navbar.ejs') %>
+            </div>
+            <div class="col-lg-11">
+                <div class="container p-5">
+                    <div class="card">
+                        <div class="card-header text-light bg-dark">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Filas</h3>
+                                </div>
+                                <div class="col">
+                                    <a href="./new" class="btn btn-primary float-right">Nova Fila</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="body-card p-2">
+                            <% if(queues){%>
+                            <table class="table text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>                                        
+                                        <th>Estratégia</th>
+                                        <th>Música de Espera</th>
+                                        <th>Timeout</th>
+                                        <th>SLA</th>
+                                        <th>MEMBROS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% queues.forEach( q => {%>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="queue_id" value="<%=q.id%>">
+                                            <a href="./edit?id=<%=q.id%>"><%=q.name%></a>
+                                        </td>
+                                        <td><%=q.strategy%></td>
+                                        <td><%=q.musiconhold%></td>
+                                        <td><%=q.timeout%></td>
+                                        <td><%=q.servicelevel%></td>
+                                        <td>
+                                            <%  let count = 0;
+                                                qmember.forEach(qm => {
+                                                    if(qm.queue_name == q.name){
+                                                        count += 1;
+                                                    }%>                                                    
+                                            <%})%>
+                                            <%=count%>
+                                        </td>
+                                    </tr>
+                                    <%})%>
+                                </tbody>
+                            </table>
+                            <%}else{%>
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <h4 class="alert-heading"><i class="fa fa-warning"></i> Erro!</h4>
+                                <p>Ocorreu uma falha ao tentar obter os dados.</p>
+                            </div>
+                            <%}%>     
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
