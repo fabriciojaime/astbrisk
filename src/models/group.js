@@ -28,7 +28,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                         id, g.name,\
                         (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,call_group) > 0	) as call_members,\
                         (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,pickup_group) > 0 ) as pickup_members\
-                    from asterisk.groups as g'
+                    from `groups` as g'
                 );
 
                 for (let [idx, row] of rows.entries()) {
@@ -55,7 +55,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                             g.name,\
                             (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,call_group) > 0	) as call_members,\
                             (select json_arrayagg(id) from ps_endpoints where FIND_IN_SET(g.id,pickup_group) > 0 ) as pickup_members\
-                        from asterisk.groups as g where g.id=?';
+                        from `groups` as g where g.id=?';
 
             try {
                 let row = await db.query(sql, [this.id]);
@@ -85,7 +85,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                 grpList = [];
 
             try {
-                let rows = await db.query('select * from asterisk.groups');
+                let rows = await db.query('select * from `groups`');
 
                 for (let [idx, row] of rows.entries()) {
                     await grpList.push({id: row.id, name: row.name});
@@ -107,7 +107,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
             await this.makeSafe();
             try {
                 db.beginTransaction();
-                let row = await db.query("insert into asterisk.groups (id, name) values (?,?)", [this.id, this.name]);
+                let row = await db.query("insert into `groups`(id, name) values (?,?)", [this.id, this.name]);
                 this.id = row.insertId;
 
                 for (let [idx, exten] of this.call_members.entries()) {
@@ -194,7 +194,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                     ) \
                 WHERE \
                   FIND_IN_SET(?, call_group) or FIND_IN_SET(?, pickup_group);",
-                sql2 = "delete from asterisk.groups where id=?";
+                sql2 = "delete from `groups` where id=?";
 
             try {
                 await db.beginTransaction();
