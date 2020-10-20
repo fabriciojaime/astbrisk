@@ -113,7 +113,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                 for (let [idx, exten] of this.call_members.entries()) {
                     //console.log(`Add ${exten} ao call_group ${this.name}`);
                     await db.query("\
-                            update asterisk.ps_endpoints\
+                            update ps_endpoints\
                                 set call_group =\
                                     case\
                                         when LENGTH(call_group) > 0 then concat(call_group,',?')\
@@ -127,7 +127,7 @@ module.exports = function Group(id, name, call_members=[], pickup_members=[]) {
                 for (let [idx, exten] of this.pickup_members.entries()) {
                     //console.log(`Add ${exten} ao pickup_group ${this.name}`);
                     await db.query("\
-                            update asterisk.ps_endpoints\
+                            update ps_endpoints\
                                 set pickup_group =\
                                     case\
                                         when LENGTH(pickup_group) > 0 then concat(pickup_group,',?')\

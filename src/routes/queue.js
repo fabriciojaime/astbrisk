@@ -1,7 +1,3 @@
-//const { isNull } = require('util');
-
-const { concat } = require('mysql2/lib/constants/charset_encodings');
-
 module.exports = (app)=>{
     const Queue = require('../models/queue'),
             Extension = require('../models/extension'),

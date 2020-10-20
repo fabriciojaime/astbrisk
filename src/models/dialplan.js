@@ -63,7 +63,7 @@ module.exports = function Dialplan(context, exten, procs = []) {
                             appdata: r.appdata
                         });
                     });
-                    this.procs['brief'] = await db.query('select context, exten, count(exten) as procss from asterisk.extensions group by context, exten;');
+                    this.procs['brief'] = await db.query('select context, exten, count(exten) as procss from extensions group by context, exten;');
                     callback(this.procs);
                     return this.procs;
                 } else {
