@@ -1,6 +1,3 @@
-const e = require('express');
-const { response } = require('express');
-
 module.exports = (app) => {
     var Extension = require('../models/extension')
     var Dialplan = require('../models/dialplan')

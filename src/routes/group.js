@@ -1,5 +1,3 @@
-const e = require('express');
-
 module.exports = (app) => {
     var Extension = require('../models/extension')
     var Group = require('../models/group')
